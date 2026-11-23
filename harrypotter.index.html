@@ -1,0 +1,3056 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>哈利波特：神秘的魔法石 — 四大學院專屬冒險與禁區試煉</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入古典襯線字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Noto+Serif+TC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --night-deep: #070b14;
+            --night-mid: #11192c;
+            --gold-bright: #f5d061;
+            --gold-dim: #b8860b;
+            --parchment-light: #f4e8d1;
+            --parchment-dark: #dcc69e;
+            --ink-brown: #2c1e16;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Noto Serif TC', serif;
+            background: radial-gradient(ellipse at bottom, var(--night-mid) 0%, var(--night-deep) 100%);
+            color: var(--parchment-light);
+            overflow-x: hidden;
+            min-height: 100vh;
+            user-select: none;
+        }
+
+        .font-magic-en {
+            font-family: 'Cinzel', serif;
+        }
+
+        /* 古典羊皮紙捲軸樣式 */
+        .parchment-scroll {
+            background: 
+                radial-gradient(circle at top left, rgba(255,255,255,0.45), transparent 60%),
+                radial-gradient(circle at bottom right, rgba(139, 90, 43, 0.25), transparent 60%),
+                linear-gradient(135deg, var(--parchment-light) 0%, var(--parchment-dark) 100%);
+            color: var(--ink-brown);
+            border: 2px solid #9c7248;
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.85),
+                inset 0 0 35px rgba(139, 90, 43, 0.45);
+            position: relative;
+        }
+
+        .scroll-roller {
+            height: 14px;
+            background: linear-gradient(90deg, #3e2723 0%, #8d6e63 20%, #d7ccc8 50%, #8d6e63 80%, #3e2723 100%);
+            border-radius: 9999px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+            border: 1px solid #261612;
+        }
+
+        .emerald-ink {
+            color: #135e3d;
+            text-shadow: 0 0 1px rgba(19, 94, 61, 0.25);
+        }
+
+        /* 魔法按鈕與互動元件 */
+        .magic-btn {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid var(--gold-bright);
+            color: var(--gold-bright);
+            box-shadow: 0 0 15px rgba(245, 208, 97, 0.2);
+            transition: all 0.2s ease;
+        }
+        .magic-btn:hover:not(:disabled) {
+            background: linear-gradient(180deg, #2d3b55 0%, #17233b 100%);
+            box-shadow: 0 0 22px rgba(245, 208, 97, 0.6);
+            transform: translateY(-2px);
+        }
+        .magic-btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+        .magic-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 角色剪影卡片選中效果 */
+        .char-card {
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 2px solid rgba(156, 114, 72, 0.4);
+            background: rgba(255, 250, 240, 0.6);
+        }
+        .char-card:hover {
+            transform: translateY(-4px);
+            border-color: #8b4513;
+            background: rgba(255, 250, 240, 0.9);
+        }
+        .char-card.selected {
+            border-color: #991b1b;
+            background: rgba(254, 242, 242, 0.95);
+            box-shadow: 0 8px 20px rgba(153, 27, 27, 0.25);
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        /* 動畫特效 */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+        .animate-float {
+            animation: floatSlow 3s ease-in-out infinite;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes fadeSlideUp {
+            0% { opacity: 0; transform: translateY(14px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .animate-scene-enter {
+            animation: fadeSlideUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes wandSwirl {
+            0% { transform: rotate(0deg) scale(0.95); opacity: 0.7; }
+            50% { transform: rotate(180deg) scale(1.08); opacity: 1; }
+            100% { transform: rotate(360deg) scale(0.95); opacity: 0.7; }
+        }
+        .animate-swirl {
+            animation: wandSwirl 3.2s linear infinite;
+        }
+
+        @keyframes hatTalk {
+            0%, 100% { transform: rotate(-4deg) scaleY(1); }
+            25% { transform: rotate(5deg) scaleY(0.92); }
+            50% { transform: rotate(-3deg) scaleY(1.06); }
+            75% { transform: rotate(4deg) scaleY(0.95); }
+        }
+        .animate-hat-talk {
+            animation: hatTalk 0.65s ease-in-out infinite;
+            transform-origin: bottom center;
+        }
+
+        @keyframes hatMouth {
+            0%, 100% { transform: scaleY(0.3); }
+            50% { transform: scaleY(1.2); }
+        }
+        .animate-hat-mouth {
+            animation: hatMouth 0.35s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .game-canvas-box {
+            position: relative;
+            width: 100%;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 2px solid #785536;
+            background: #0a0f1d;
+            box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+            touch-action: none;
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-between p-3 sm:p-5 relative">
+
+    <!-- 背景畫布：深邃夜空與星塵 -->
+    <canvas id="bgStarCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- 頂部魔法狀態欄 (HUD) -->
+    <header id="gameHud" class="relative z-20 w-full max-w-3xl mb-3 px-3 sm:px-5 py-2.5 rounded-xl bg-slate-950/85 border border-amber-500/40 backdrop-blur-md shadow-xl flex flex-wrap items-center justify-between gap-2 hidden">
+        <div class="flex items-center gap-2.5">
+            <div id="hudAvatar" class="w-10 h-10 rounded-full bg-slate-900 border border-amber-400/70 flex items-center justify-center overflow-hidden shadow-inner shrink-0"></div>
+            <div>
+                <div class="flex items-center gap-1.5">
+                    <span id="hudName" class="font-bold text-amber-200 text-sm sm:text-base">哈利·波特</span>
+                    <span id="hudHouseBadge" class="text-[11px] px-2 py-0.5 rounded-full bg-red-900/90 text-amber-200 border border-amber-400/40 font-semibold">未分類</span>
+                </div>
+                <p id="hudTrait" class="text-[11px] text-amber-300/80">特質：純粹膽識與直覺飛行</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-3 sm:gap-4 text-xs sm:text-sm">
+            <div id="hudInventory" class="flex items-center gap-1 bg-slate-900/90 px-2.5 py-1 rounded-lg border border-amber-500/20" title="持有道具">
+                <span class="text-amber-400/70 text-xs">行囊：</span>
+                <span id="invItems" class="text-sm">🪄</span>
+            </div>
+            <div class="text-right">
+                <div class="text-[11px] text-amber-300/70" id="hudStageLabel">序幕：分類儀式</div>
+                <div class="font-bold text-amber-400">學院分：<span id="hudPoints">0</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主遊戲舞台容器 -->
+    <main class="relative z-10 w-full max-w-3xl my-auto">
+        <div class="scroll-roller w-[103%] -ml-[1.5%] relative z-20"></div>
+        <div id="stageContainer" class="parchment-scroll px-4 py-6 sm:px-8 sm:py-8 rounded-b-xl rounded-t-sm min-h-[470px] flex flex-col justify-between"></div>
+        <div class="scroll-roller w-[103%] -ml-[1.5%] -mt-1 relative z-20"></div>
+    </main>
+
+    <!-- 底部版權與音效控制 -->
+    <footer class="relative z-10 w-full max-w-3xl mt-3 flex flex-wrap justify-between items-center gap-2 text-xs text-amber-200/60 px-2">
+        <span>《哈利波特：神秘的魔法石》四大學院專屬冒險</span>
+        <div class="flex items-center gap-2">
+            <button id="bgmToggleBtn" onclick="AudioEngine.toggleBgm()" class="px-2.5 py-1 rounded bg-slate-900/80 border border-amber-500/40 text-amber-300 hover:bg-slate-800 cursor-pointer">
+                🎵 背景音樂：開啟
+            </button>
+            <button id="muteToggleBtn" onclick="AudioEngine.toggleMute()" class="px-2.5 py-1 rounded bg-slate-900/80 border border-amber-500/40 text-amber-300 hover:bg-slate-800 cursor-pointer">
+                🔊 魔法音效：開啟
+            </button>
+        </div>
+    </footer>
+
+    <script>
+        /**
+         * ==========================================
+         * 1. SVG 精緻人物剪影庫 (Character Silhouettes)
+         * ==========================================
+         */
+        const Silhouettes = {
+            harry: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="48" fill="rgba(220,38,38,0.28)"/>
+                    <path d="M22,95 C22,74 34,68 50,68 C66,68 78,74 78,95 Z" fill="#1e1b18"/>
+                    <path d="M33,44 C31,32 34,20 44,18 C48,14 55,15 58,19 C67,18 71,28 68,40 C71,44 69,56 62,62 C57,66 43,66 38,62 C31,56 30,48 33,44 Z" fill="#1e1b18"/>
+                    <circle cx="43" cy="46" r="6.5" fill="none" stroke="#f5d061" stroke-width="2"/>
+                    <circle cx="58" cy="46" r="6.5" fill="none" stroke="#f5d061" stroke-width="2"/>
+                    <line x1="49.5" y1="46" x2="51.5" y2="46" stroke="#f5d061" stroke-width="2"/>
+                    <polyline points="53,27 49,33 54,34 50,40" fill="none" stroke="#fde047" stroke-width="2" stroke-linecap="round"/>
+                </svg>`,
+            ron: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="48" fill="rgba(234,88,12,0.25)"/>
+                    <path d="M20,95 C20,73 33,67 50,67 C67,67 80,73 80,95 Z" fill="#291d18"/>
+                    <path d="M32,45 C30,30 37,19 50,19 C63,19 70,30 68,45 C68,56 61,64 50,64 C39,64 32,56 32,45 Z" fill="#431407"/>
+                    <circle cx="41" cy="50" r="1.2" fill="#fdba74"/>
+                    <circle cx="44" cy="52" r="1.2" fill="#fdba74"/>
+                    <circle cx="57" cy="50" r="1.2" fill="#fdba74"/>
+                    <circle cx="60" cy="52" r="1.2" fill="#fdba74"/>
+                    <path d="M46,84 L54,84 L52,75 L55,72 L49,69 L45,73 L48,76 Z" fill="#f5d061"/>
+                </svg>`,
+            hermione: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="48" fill="rgba(180,83,9,0.25)"/>
+                    <path d="M23,78 C17,64 20,45 26,34 C28,21 39,16 50,16 C61,16 72,21 74,34 C80,45 83,64 77,78 C71,72 66,68 62,67 L38,67 C34,68 29,72 23,78 Z" fill="#271a12"/>
+                    <path d="M24,95 C25,75 36,68 50,68 C64,68 75,75 76,95 Z" fill="#1e1b18"/>
+                    <ellipse cx="50" cy="45" rx="14" ry="18" fill="#271a12"/>
+                    <path d="M74,24 L76,30 L82,32 L76,34 L74,40 L72,34 L66,32 L72,30 Z" fill="#f5d061"/>
+                </svg>`,
+            custom: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="48" fill="rgba(56,189,248,0.2)"/>
+                    <path d="M22,95 C22,74 34,68 50,68 C66,68 78,74 78,95 Z" fill="#1e293b"/>
+                    <circle cx="50" cy="50" r="15" fill="#1e293b"/>
+                    <path d="M24,42 Q50,36 76,42 Q64,36 58,34 L52,12 L40,34 Q32,36 24,42 Z" fill="#0f172a" stroke="#f5d061" stroke-width="1.5"/>
+                </svg>`,
+            hagrid: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <path d="M10,95 C10,65 25,58 50,58 C75,58 90,65 90,95 Z" fill="#1c1917"/>
+                    <path d="M26,42 C24,22 36,12 50,12 C64,12 76,22 74,42 C78,56 70,74 50,76 C30,74 22,56 26,42 Z" fill="#292524"/>
+                    <circle cx="43" cy="38" r="2.2" fill="#f5d061"/>
+                    <circle cx="57" cy="38" r="2.2" fill="#f5d061"/>
+                </svg>`,
+            dumbledore: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <path d="M20,95 C22,72 34,66 50,66 C66,66 78,72 80,95 Z" fill="#1e1b4b"/>
+                    <path d="M35,45 L65,45 L58,88 L50,94 L42,88 Z" fill="#e2e8f0"/>
+                    <path d="M26,34 L74,34 L50,10 Z" fill="#312e81" stroke="#f5d061" stroke-width="1.5"/>
+                    <path d="M38,42 A5,4 0 0,0 48,42 Z" fill="none" stroke="#f5d061" stroke-width="1.8"/>
+                    <path d="M52,42 A5,4 0 0,0 62,42 Z" fill="none" stroke="#f5d061" stroke-width="1.8"/>
+                </svg>`,
+            snape: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <path d="M18,95 L28,64 L50,72 L72,64 L82,95 Z" fill="#090d16"/>
+                    <path d="M30,65 C28,45 30,20 50,20 C70,20 72,45 70,65 L62,62 C62,48 60,34 50,34 C40,34 38,48 38,62 Z" fill="#0f172a"/>
+                    <ellipse cx="50" cy="46" rx="11" ry="15" fill="#1e293b"/>
+                </svg>`,
+            mcgonagall: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="48" fill="rgba(16,185,129,0.2)"/>
+                    <path d="M22,95 C24,72 35,66 50,66 C65,66 76,72 78,95 Z" fill="#064e3b"/>
+                    <path d="M28,36 L72,36 L50,8 Z" fill="#065f46" stroke="#f5d061" stroke-width="1.5"/>
+                    <rect x="37" y="43" width="10" height="7" rx="1.5" fill="none" stroke="#f5d061" stroke-width="1.8"/>
+                    <rect x="53" y="43" width="10" height="7" rx="1.5" fill="none" stroke="#f5d061" stroke-width="1.8"/>
+                </svg>`,
+            flitwick: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="48" fill="rgba(59,130,246,0.25)"/>
+                    <path d="M26,95 C28,76 38,70 50,70 C62,70 72,76 74,95 Z" fill="#1e3a8a"/>
+                    <circle cx="50" cy="48" r="16" fill="#cbd5e1"/>
+                    <path d="M36,56 Q50,66 64,56" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+                </svg>`,
+            sprout: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="48" fill="rgba(234,179,8,0.25)"/>
+                    <path d="M20,95 C22,74 34,68 50,68 C66,68 78,74 80,95 Z" fill="#713f12"/>
+                    <ellipse cx="50" cy="36" rx="34" ry="9" fill="#854d0e"/>
+                    <path d="M32,36 C35,20 65,20 68,36 Z" fill="#a16207"/>
+                </svg>`,
+            quirrell: `
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                    <circle cx="50" cy="50" r="48" fill="rgba(88,28,135,0.35)"/>
+                    <path d="M22,95 C22,74 34,68 50,68 C66,68 78,74 78,95 Z" fill="#2e1065"/>
+                    <path d="M31,42 C29,22 38,14 50,14 C62,14 71,22 69,42 C68,56 60,64 50,64 C40,64 32,56 31,42 Z" fill="#4c1d95" stroke="#a855f7" stroke-width="1.5"/>
+                    <path d="M40,48 L46,46 L42,50 Z" fill="#ef4444"/>
+                    <path d="M60,48 L54,46 L58,50 Z" fill="#ef4444"/>
+                </svg>`,
+            sortingHat: `
+                <svg viewBox="0 0 120 120" class="w-full h-full animate-hat-talk">
+                    <circle cx="60" cy="60" r="56" fill="rgba(245,158,11,0.2)"/>
+                    <ellipse cx="60" cy="96" rx="50" ry="12" fill="#3e2723" stroke="#1c110d" stroke-width="2"/>
+                    <path d="M24,94 C28,68 38,48 48,32 C54,22 68,12 78,18 C72,28 68,38 74,48 C82,62 90,76 96,94 Z" fill="#4e342e" stroke="#261612" stroke-width="2"/>
+                    <path d="M42,58 Q50,64 56,56" fill="none" stroke="#1c110d" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M64,56 Q70,64 78,58" fill="none" stroke="#1c110d" stroke-width="3" stroke-linecap="round"/>
+                    <ellipse cx="60" cy="76" rx="16" ry="5" fill="#1a0f0a" class="animate-hat-mouth"/>
+                </svg>`
+        };
+
+        /**
+         * ==========================================
+         * 2. Web Audio API 即時魔法音效與《海德薇變奏曲》背景音樂引擎
+         * ==========================================
+         */
+        const AudioEngine = {
+            ctx: null,
+            muted: false,
+            bgmMuted: false,
+            bgmTimer: null,
+            bgmIndex: 0,
+            isPlayingBgm: false,
+
+            hedwigMelody: [
+                { f: 493.88, d: 0.38 }, { f: 659.25, d: 0.57 }, { f: 783.99, d: 0.19 }, { f: 739.99, d: 0.38 },
+                { f: 659.25, d: 0.76 }, { f: 987.77, d: 0.38 }, { f: 880.00, d: 1.14 }, { f: 739.99, d: 1.14 },
+                { f: 659.25, d: 0.57 }, { f: 783.99, d: 0.19 }, { f: 739.99, d: 0.38 }, { f: 587.33, d: 0.76 },
+                { f: 698.46, d: 0.38 }, { f: 493.88, d: 1.14 }, { f: 0,      d: 0.38 },
+                { f: 493.88, d: 0.38 }, { f: 659.25, d: 0.57 }, { f: 783.99, d: 0.19 }, { f: 739.99, d: 0.38 },
+                { f: 659.25, d: 0.76 }, { f: 987.77, d: 0.38 }, { f: 1174.66, d: 0.76 }, { f: 1108.73, d: 0.38 },
+                { f: 1046.50, d: 0.76 }, { f: 830.61, d: 0.38 }, { f: 1046.50, d: 0.57 }, { f: 987.77, d: 0.19 },
+                { f: 932.33, d: 0.38 }, { f: 466.16, d: 0.76 }, { f: 783.99, d: 0.38 }, { f: 659.25, d: 1.14 },
+                { f: 0,      d: 0.65 }
+            ],
+
+            init() {
+                if (!this.ctx) {
+                    this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (this.ctx.state === 'suspended') {
+                    this.ctx.resume();
+                }
+                if (!this.isPlayingBgm && !this.bgmMuted) {
+                    this.startBgm();
+                }
+            },
+
+            playCelestaNote(freq, duration) {
+                if (this.bgmMuted || freq <= 0 || !this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc1 = this.ctx.createOscillator();
+                const osc2 = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc1.type = 'sine';
+                osc2.type = 'triangle';
+                osc1.frequency.setValueAtTime(freq, now);
+                osc2.frequency.setValueAtTime(freq * 2, now);
+                const subGain = this.ctx.createGain();
+                subGain.gain.setValueAtTime(0.025, now);
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.exponentialRampToValueAtTime(0.085, now + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + duration + 0.45);
+                osc1.connect(gain);
+                osc2.connect(subGain);
+                subGain.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc1.start(now);
+                osc2.start(now);
+                osc1.stop(now + duration + 0.5);
+                osc2.stop(now + duration + 0.5);
+            },
+
+            startBgm() {
+                if (this.isPlayingBgm) return;
+                this.isPlayingBgm = true;
+                const playNext = () => {
+                    if (!this.isPlayingBgm) return;
+                    const note = this.hedwigMelody[this.bgmIndex];
+                    if (!this.bgmMuted && note.f > 0) {
+                        this.playCelestaNote(note.f, note.d);
+                    }
+                    this.bgmIndex = (this.bgmIndex + 1) % this.hedwigMelody.length;
+                    this.bgmTimer = setTimeout(playNext, note.d * 1000);
+                };
+                playNext();
+            },
+
+            toggleBgm() {
+                this.bgmMuted = !this.bgmMuted;
+                const btn = document.getElementById('bgmToggleBtn');
+                if (this.bgmMuted) {
+                    btn.textContent = '🔇 背景音樂：關閉';
+                } else {
+                    btn.textContent = '🎵 背景音樂：開啟';
+                    this.init();
+                }
+            },
+
+            toggleMute() {
+                this.muted = !this.muted;
+                document.getElementById('muteToggleBtn').textContent = this.muted ? '🔇 魔法音效：靜音' : '🔊 魔法音效：開啟';
+            },
+
+            playTone(freq, type = 'sine', duration = 0.3, vol = 0.12, delay = 0) {
+                if (this.muted) return;
+                this.init();
+                const now = this.ctx.currentTime + delay;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+                gain.gain.setValueAtTime(0.001, now);
+                gain.gain.exponentialRampToValueAtTime(vol, now + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + duration + 0.05);
+            },
+            playSuccess() {
+                [523.25, 659.25, 783.99, 1046.50].forEach((f, i) => this.playTone(f, 'sine', 0.4, 0.12, i * 0.07));
+            },
+            playError() {
+                this.playTone(180, 'sawtooth', 0.25, 0.15, 0);
+                this.playTone(140, 'sawtooth', 0.35, 0.15, 0.12);
+            },
+            playClick() {
+                this.playTone(620, 'triangle', 0.08, 0.08, 0);
+            },
+            playFluteNote(noteIndex) {
+                const scale = [392.00, 440.00, 493.88, 587.33];
+                this.playTone(scale[noteIndex % scale.length], 'sine', 0.55, 0.16, 0);
+            },
+            playFanfare() {
+                const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+                const times = [0, 0.12, 0.24, 0.38, 0.55, 0.72];
+                notes.forEach((f, i) => this.playTone(f, 'triangle', 0.5, 0.15, times[i]));
+            }
+        };
+
+        ['pointerdown', 'keydown'].forEach(evt => {
+            window.addEventListener(evt, () => AudioEngine.init(), { once: true });
+        });
+
+        /**
+         * ==========================================
+         * 3. 四大學院專屬劇情與 5 大獨立關卡設定庫
+         * ==========================================
+         */
+        const HouseCampaigns = {
+            '葛來分多': {
+                icon: '🦁',
+                colorClass: 'bg-red-900',
+                mentorKey: 'mcgonagall',
+                mentorName: '麥教授',
+                mentorTitle: '葛來分多院長',
+                l1: {
+                    title: '第一關：水手街綠墨水信件與海格的木笛',
+                    story: '德思禮一家企圖把你鎖在懸崖孤島小屋中阻擋霍格華茲的召喚！在海格破門而入前，先搶下那些翡翠綠墨水的入學通知信！',
+                    guide: [
+                        '畫面中會不斷飛出「✉️ 翡翠綠入學信」與弗農姨丈的「🚫 撕毀干擾」。',
+                        '在 14 秒內點擊收集滿 <strong>12 封入學信</strong> 即可召喚海格破門。',
+                        '注意：誤點「🚫 撕毀信件」會倒扣 2 封進度！'
+                    ],
+                    goodItem: '✉️ 入學信',
+                    badItem: '🚫 撕毀信件 (-2)',
+                    rewardItem: '海格的木笛',
+                    afterSpeaker: 'hagrid',
+                    afterName: '魯比·海格',
+                    afterTitle: '鑰匙管理員',
+                    afterQuote: '「好樣的！拿著這把木笛，三樓禁區那隻三頭犬毛毛只要聽到音樂就會呼呼大睡！」'
+                },
+                l2: {
+                    title: '第二關：搜捕手的俯衝與狂暴遊走球',
+                    story: '麥教授破格錄取你成為百年來最年輕的搜捕手！但奎若教授正對你的光輪兩千念誦惡咒，你必須閃避狂暴遊走球並捕捉飛翅鑰匙。',
+                    guide: [
+                        '使用 <strong>滑鼠上下移動</strong> 或 <strong>手指在畫布上滑動</strong> 控制掃帚高度。',
+                        '躲避紅色撞擊的「狂暴遊走球」（護盾提升至 <strong>5 點</strong>，速度更平穩易躲）。',
+                        '成功捕捉 <strong>4 把銀色飛翅鑰匙</strong> 即可打開通往禁區深處的大門！'
+                    ],
+                    targetName: '銀色飛翅鑰匙',
+                    hazardName: '狂暴遊走球',
+                    rewardItem: '銀色飛翅鑰匙'
+                },
+                l3: {
+                    title: '第三關：安撫三頭犬毛毛 ＆ 太陽火焰陣',
+                    story: '跳下陷阱門後，面對咆哮的三頭犬毛毛與迅速收緊的魔鬼網藤蔓！唯有勇氣與冷靜的雙重施法才能脫困。',
+                    guideA: [
+                        '<strong>上半場（安眠曲記憶）</strong>：系統會先示範吹奏 <strong>6 個音符</strong>，請專心記住亮燈順序。',
+                        '示範結束後，憑記憶依序點擊對應的 6 個音符按鈕讓毛毛入睡。'
+                    ],
+                    guideB: [
+                        '<strong>下半場（Lumos Solem 太陽火焰咒）</strong>：按住滑鼠或手指，依序連通五芒星上的 <strong>1 → 2 → 3 → 4 → 5</strong> 符文節點。',
+                        '五個節點全亮後，繼續按住並劃圈將魔法陣充能至 <strong>100%</strong>，在 12 秒內燒毀魔鬼網！'
+                    ]
+                },
+                l4: {
+                    title: '第四關：榮恩的西洋棋犧牲 ＆ 魔藥邏輯謎題',
+                    story: '葛來分多三人組迎來最艱鉅的考驗：榮恩以大局觀指揮巫師棋陣，妙麗則要在烈火合攏前破解石內卜設下的魔藥邏輯詩。',
+                    guide: [
+                        '<strong>戰術抉擇</strong>：面對白棋皇后的石劍封鎖，做出正確的西洋棋犧牲戰術指令。',
+                        '<strong>限時魔藥推理</strong>：在 <strong>22 秒內</strong> 閱讀詩句線索，從 6 個藥水瓶中選出唯一能穿越「黑色火焰」前進的正確藥瓶（選錯倒扣 5 秒）。'
+                    ],
+                    chessPrompt: '「聽我指揮！這盤棋只有一種贏法——我必須騎著騎士往前一步，讓白棋皇后吃掉我，這樣你們就能空出路徑將死白棋國王了！」',
+                    chessGood: '♟️ 信任榮恩的戰術犧牲，趁隙移動一步「將軍（Checkmate）」！',
+                    chessBad: '❌ 「不行！我們三個人一起強行衝過去！」（將遭白棋石劍無情擊碎）'
+                },
+                l5: {
+                    title: '第五關：意亂情迷鏡 ＆ 莉莉的愛之古老防禦',
+                    story: '在最後的密室裡，奎若解開頭巾露出了後腦勺上的佛地魔！唯有心中毫無私慾、只為守護魔法石的人，才能觸發母親莉莉留下的古老防禦魔法。',
+                    guide: [
+                        '<strong>階段一（鏡像抉擇）</strong>：在意亂情迷鏡前克服長生不老與財富的貪念，堅守「只為保護、絕不私用」的信念。',
+                        '<strong>階段二（愛之護盾拉鋸戰）</strong>：佛地魔的反擊會不斷侵蝕你的護盾能量！請<strong>全速連點按鈕</strong>將金色愛之護盾推升至 100% 擊潰奎若！'
+                    ]
+                }
+            },
+            '雷文克勞': {
+                icon: '🦅',
+                colorClass: 'bg-blue-900',
+                mentorKey: 'flitwick',
+                mentorName: '孚立維教授',
+                mentorTitle: '雷文克勞院長',
+                l1: {
+                    title: '第一關：奧利凡德古籍殘頁與智慧羽毛筆',
+                    story: '雷文克勞塔樓的門環向你提出第一道考驗：在《古代魔文與魔法石史料》的飛散書頁中，收集阿尼·尼樂的煉金術手稿！',
+                    guide: [
+                        '畫面中會不斷飛出「📜 煉金手稿殘頁」與混淆視聽的「🚫 錯誤贗品抄本」。',
+                        '在 14 秒內精準收集滿 <strong>12 份真品手稿</strong> 即可推導出魔法石的秘密。',
+                        '注意：誤點「🚫 贗品抄本」會導致推理混亂並倒扣 2 份進度！'
+                    ],
+                    goodItem: '📜 煉金手稿',
+                    badItem: '🚫 贗品抄本 (-2)',
+                    rewardItem: '尼樂的煉金筆記',
+                    afterSpeaker: 'flitwick',
+                    afterName: '菲力·孚立維',
+                    afterTitle: '雷文克勞院長',
+                    afterQuote: '「太精彩了！過人的聰慧才是巫師最大的財富。這份手稿揭示了魔法石就藏在三樓禁區的機關深處！」'
+                },
+                l2: {
+                    title: '第二關：天文塔星象儀與飛翅鑰匙軌跡計算',
+                    story: '孚立維教授在禁區設下了「飛翅鑰匙」陣列。雷文克勞的巫師不靠蠻力，而是透過精準計算氣流與幾何軌跡來攔截目標！',
+                    guide: [
+                        '使用 <strong>滑鼠上下移動</strong> 或 <strong>手指滑動</strong> 控制掃帚的飛行高度。',
+                        '躲避軌道失控的「干擾鐵球」（護盾提升至 <strong>5 點</strong>，航道更寬敞）。',
+                        '精準計算提前量，捕捉 <strong>4 把銀色飛翅鑰匙</strong> 破解門鎖幾何結構！'
+                    ],
+                    targetName: '銀色飛翅鑰匙',
+                    hazardName: '失控鐵球',
+                    rewardItem: '天文星象鑰匙'
+                },
+                l3: {
+                    title: '第三關：音律共鳴安眠曲 ＆ 五芒星光學陣',
+                    story: '透過聲學頻率安撫三頭犬毛毛後，你掉入了厭惡光線的魔鬼網中。運用光學與幾何知識，繪製出最純粹的太陽光束魔法陣！',
+                    guideA: [
+                        '<strong>上半場（聲波頻率記憶）</strong>：系統會先演奏一段 <strong>6 個音符</strong>的共鳴頻率，請專心記憶。',
+                        '示範結束後，憑記憶精準重現這 6 個音符讓三頭犬進入深度睡眠。'
+                    ],
+                    guideB: [
+                        '<strong>下半場（Lumos Solem 光學五芒星陣）</strong>：按住滑鼠或手指，依序連通 <strong>1 → 2 → 3 → 4 → 5</strong> 符文節點。',
+                        '五個節點全亮後，繼續劃圈將光學能量充能至 <strong>100%</strong>，在 12 秒內驅散黑暗藤蔓！'
+                    ]
+                },
+                l4: {
+                    title: '第四關：雷文克勞威嚴銅鷹謎語 ＆ 魔藥邏輯',
+                    story: '在進入最終密室前，你必須先回答雷文克勞經典的哲學門環謎語，接著在 22 秒內破解黑白火焰的純邏輯毒藥排列！',
+                    guide: [
+                        '<strong>銅鷹哲學謎題</strong>：思考「鳳凰與火焰哪一個先出現」，給出最符合雷文克勞智慧的回答。',
+                        '<strong>限時魔藥推理</strong>：在 <strong>22 秒內</strong> 根據詩句推理，選出唯一能穿越「黑色火焰」前進的正確藥水瓶（選錯倒扣 5 秒）。'
+                    ],
+                    chessPrompt: '「雷文克勞門環的威嚴銅鷹向你發問：『鳳凰與火焰，哪一個先出現？』」',
+                    chessGood: '🦅 「圓圈沒有起點。」（銅鷹欣然點頭，讚賞你超越線性思維的智慧！）',
+                    chessBad: '❌ 「當然是火焰先燃燒，鳳凰才從灰燼中誕生。」（銅鷹搖頭拒絕開門）'
+                },
+                l5: {
+                    title: '第五關：意亂情迷鏡的真理公式 ＆ 精神護盾',
+                    story: '面對渴望利用魔法石永生的佛地魔，你一眼看穿了鄧不利多設下的「慾望悖論公式」：唯有不想使用石頭的人，才能獲得石頭！',
+                    guide: [
+                        '<strong>階段一（真理公式驗證）</strong>：拒絕鏡中「掌握全知全能魔法書」的幻象誘惑，貫徹純粹守護的理性選擇。',
+                        '<strong>階段二（智慧與愛之護盾）</strong>：佛地魔發動精神與黑魔法反撲！請<strong>全速連點按鈕</strong>維持金色護盾至 100% 擊退黑魔王！'
+                    ]
+                }
+            },
+            '赫夫帕夫': {
+                icon: '🦡',
+                colorClass: 'bg-amber-700',
+                mentorKey: 'sprout',
+                mentorName: '芽菜教授',
+                mentorTitle: '赫夫帕夫院長',
+                l1: {
+                    title: '第一關：溫室魔藥草藥採集與禁區線索',
+                    story: '芽菜教授在溫室培育了對抗禁區植物的重要草藥，同時廚房的家養小精靈也偷偷傳來了三樓走廊的異常消息！',
+                    guide: [
+                        '畫面中會不斷飛出「🌿 發光白鮮草藥」與誤觸會讓人發癢的「🚫 咬人甘藍葉」。',
+                        '在 14 秒內採集滿 <strong>12 株白鮮草藥</strong> 即可配製出守護夥伴的急救藥膏。',
+                        '注意：誤點「🚫 咬人甘藍」會被咬傷並倒扣 2 株進度！'
+                    ],
+                    goodItem: '🌿 白鮮草藥',
+                    badItem: '🚫 咬人甘藍 (-2)',
+                    rewardItem: '白鮮急救藥膏',
+                    afterSpeaker: 'sprout',
+                    afterName: '帕莫娜·芽菜',
+                    afterTitle: '赫夫帕夫院長',
+                    afterQuote: '「幹得好，勤奮又細心的孩子！記住，地底下的魔鬼網最怕陽光與溫暖的火焰，去幫助你的朋友們吧！」'
+                },
+                l2: {
+                    title: '第二關：穿越禁忌森林邊緣支援夥伴',
+                    story: '得知有人企圖偷走魔法石後，赫夫帕夫的忠誠讓你毫不猶豫騎上掃帚，穿越危險的空中障礙去支援受傷的夥伴！',
+                    guide: [
+                        '使用 <strong>滑鼠上下移動</strong> 或 <strong>手指滑動</strong> 控制掃帚高度。',
+                        '躲避樹梢飛來的「失控遊走球」（護盾提升至 <strong>5 點</strong>，飛行更穩定）。',
+                        '沿途接住 <strong>4 把銀色飛翅鑰匙</strong> 打開通往禁區深處的密門！'
+                    ],
+                    targetName: '銀色飛翅鑰匙',
+                    hazardName: '失控遊走球',
+                    rewardItem: '夥伴支援鑰匙'
+                },
+                l3: {
+                    title: '第三關：溫柔牧羊笛安眠曲 ＆ 陽光火焰咒',
+                    story: '赫夫帕夫的巫師天生懂得與神奇生物和平共處。先用溫柔的笛聲安撫三頭犬毛毛，再用芽菜教授教導的陽光火焰咒破解魔鬼網！',
+                    guideA: [
+                        '<strong>上半場（安撫笛聲記憶）</strong>：系統會先吹奏 <strong>6 個音符</strong>的安撫旋律，請專心傾聽。',
+                        '示範結束後，憑記憶依序吹出相同的 6 個音符讓三頭犬安心入睡。'
+                    ],
+                    guideB: [
+                        '<strong>下半場（Lumos Solem 陽光火焰咒）</strong>：按住滑鼠或手指，依序連通五芒星上的 <strong>1 → 2 → 3 → 4 → 5</strong> 符文節點。',
+                        '五個節點全亮後，繼續劃圈將陽光魔力充能至 <strong>100%</strong>，在 12 秒內讓魔鬼網鬆開藤蔓！'
+                    ]
+                },
+                l4: {
+                    title: '第四關：團隊守護的抉擇 ＆ 魔藥邏輯難題',
+                    story: '面對前方的重重機關，你決定留下來照顧受傷倒地的夥伴，並用細心與耐心在 22 秒內破解守護魔法石的魔藥陣列！',
+                    guide: [
+                        '<strong>忠誠與正義抉擇</strong>：面對危機，展現赫夫帕夫「不拋棄任何一位夥伴」的堅定信念。',
+                        '<strong>限時魔藥推理</strong>：在 <strong>22 秒內</strong> 細心比對詩句線索，選出唯一能穿越「黑色火焰」前進的藥水瓶（選錯倒扣 5 秒）。'
+                    ],
+                    chessPrompt: '「前方的機關只能讓一個人繼續前進，而身旁有夥伴受傷昏迷了，你會怎麼決定？」',
+                    chessGood: '🦡 「我們絕不拋下夥伴！先為他敷上白鮮藥膏並守住退路，再合力破解前方的魔藥關卡！」',
+                    chessBad: '❌ 「不管受傷的人了，我自己先搶功勞衝進去！」（背棄忠誠信念，機關拒絕啟動）'
+                },
+                l5: {
+                    title: '第五關：無私之鏡 ＆ 守護夥伴的金色護盾',
+                    story: '在意亂情迷鏡前，赫夫帕夫不求名利與永生的純潔之心完美契合了鄧不利多的魔法機制，魔法石自動落入了你的口袋！',
+                    guide: [
+                        '<strong>階段一（無私之心考驗）</strong>：拒絕鏡中權力與財富的誘惑，只願保護所有霍格華茲師生的平安。',
+                        '<strong>階段二（忠誠與愛之護盾）</strong>：面對奎若與佛地魔的瘋狂撲擊，請<strong>全速連點按鈕</strong>撐起金色護盾至 100% 守護大家！'
+                    ]
+                }
+            },
+            '史萊哲林': {
+                icon: '🐍',
+                colorClass: 'bg-emerald-900',
+                mentorKey: 'snape',
+                mentorName: '石內卜教授',
+                mentorTitle: '史萊哲林院長',
+                l1: {
+                    title: '第一關：地窖秘密情報與石內卜的暗中監視',
+                    story: '身為史萊哲林的菁英，你敏銳察覺到黑魔法防禦術教授奎若行蹤鬼祟！你決定潛入走廊收集線索，證明史萊哲林才是真正的校園守護者！',
+                    guide: [
+                        '畫面中會不斷飛出「🐍 加密情報密函」與會暴露行蹤的「🚫 皮皮鬼惡作劇炸彈」。',
+                        '在 14 秒內截獲滿 <strong>12 份加密密函</strong> 即可鎖定奎若偷竊魔法石的陰謀。',
+                        '注意：誤點「🚫 皮皮鬼炸彈」會引來管理員並倒扣 2 份進度！'
+                    ],
+                    goodItem: '🐍 加密密函',
+                    badItem: '🚫 皮皮鬼炸彈 (-2)',
+                    rewardItem: '地窖反咒手札',
+                    afterSpeaker: 'snape',
+                    afterName: '賽佛勒斯·石內卜',
+                    afterTitle: '史萊哲林院長',
+                    afterQuote: '「哼……看來史萊哲林裡還有人長著腦子。記住，真正危險的是那個結結巴巴的奎若，別讓葛來分多那群魯莽的傢伙搶先出風頭！」'
+                },
+                l2: {
+                    title: '第二關：搜捕手的冷酷交鋒與飛翅鑰匙奪取',
+                    story: '在三樓禁區的飛翅鑰匙大廳裡，你展現出不亞於任何人的高超飛行技巧，在致命鐵球的包夾中精準鎖定目標鑰匙！',
+                    guide: [
+                        '使用 <strong>滑鼠上下移動</strong> 或 <strong>手指滑動</strong> 控制掃帚的疾速俯衝。',
+                        '冷靜閃避「失控遊走球」（護盾提升至 <strong>5 點</strong>，更容易閃避）。',
+                        '展現精準判斷力，搶先捕捉 <strong>4 把銀色飛翅鑰匙</strong> 打開通往深處的門鎖！'
+                    ],
+                    targetName: '銀色飛翅鑰匙',
+                    hazardName: '失控遊走球',
+                    rewardItem: '翡翠蛇紋鑰匙'
+                },
+                l3: {
+                    title: '第三關：蛇佬腔低語安眠曲 ＆ 烈焰黑魔防禦陣',
+                    story: '利用冷靜的節奏控制三頭犬毛毛後，面對纏繞上來的魔鬼網，你果斷施展高階火焰魔法陣，展現史萊哲林強大的魔咒掌控力！',
+                    guideA: [
+                        '<strong>上半場（節奏掌控記憶）</strong>：系統會先示範 <strong>6 個音符</strong>的催眠旋律，請精準記住。',
+                        '示範結束後，憑記憶依序吹出相同的 6 個音符馴服巨犬毛毛。'
+                    ],
+                    guideB: [
+                        '<strong>下半場（Lumos Solem 烈焰魔法陣）</strong>：按住滑鼠或手指，依序連通五芒星上的 <strong>1 → 2 → 3 → 4 → 5</strong> 符文節點。',
+                        '五個節點全亮後，繼續劃圈將火焰能量充能至 <strong>100%</strong>，在 12 秒內將魔鬼網徹底燒成灰燼！'
+                    ]
+                },
+                l4: {
+                    title: '第四關：學院榮耀的戰略布局 ＆ 石內卜的魔藥考驗',
+                    story: '你來到了院長石內卜親手設計的魔藥邏輯關卡前！在展現戰略大局觀後，用 22 秒破解院長設下的黑白火焰謎題，證明你的實力！',
+                    guide: [
+                        '<strong>戰略布局抉擇</strong>：面對前方的阻礙，做出最冷靜、最具戰略價值的行動決策。',
+                        '<strong>院長的限時魔藥考驗</strong>：在 <strong>22 秒內</strong> 根據石內卜寫下的詩句，選出唯一能穿越「黑色火焰」前進的藥瓶（選錯倒扣 5 秒）。'
+                    ],
+                    chessPrompt: '「面對即將連霸七年學院盃的榮耀與眼前竊取魔法石的黑巫師，史萊哲林的你會如何抉擇？」',
+                    chessGood: '🐍 「阻止黑魔王復活才是真正的偉大榮耀！精準計算步數將死敵軍，親自粉碎奎若的陰謀！」',
+                    chessBad: '❌ 「乾脆袖手旁觀，讓黑魔王去對付其他人吧。」（失去資格，魔法大門緊閉）'
+                },
+                l5: {
+                    title: '第五關：駕馭野心之鏡 ＆ 擊潰背叛者奎若',
+                    story: '面對企圖利用黑魔王獲取權力的奎若，你展現了史萊哲林真正的精明——真正的強者絕不會成為別人的傀儡，而是親手守護魔法石！',
+                    guide: [
+                        '<strong>階段一（野心與自制考驗）</strong>：拒絕佛地魔畫餅充飢的權力誘惑，堅定「絕不交出魔法石」的驕傲意志。',
+                        '<strong>階段二（反咒與愛之護盾）</strong>：結合石內卜傳授的保護反咒與古老防禦，請<strong>全速連點按鈕</strong>將金色護盾推至 100% 徹底擊潰奎若！'
+                    ]
+                }
+            }
+        };
+
+        /**
+         * ==========================================
+         * 4. 全域遊戲狀態與工具函式
+         * ==========================================
+         */
+        const GameState = {
+            roleId: 'harry',
+            playerName: '哈利·波特',
+            traitDesc: '純粹膽識與直覺飛行',
+            house: '葛來分多',
+            houseColor: 'bg-red-900',
+            points: 0,
+            mistakes: 0,
+            inventory: ['冬青木魔杖'],
+            currentStep: 'SELECT_CHAR'
+        };
+
+        const RolePresets = {
+            harry: {
+                name: '哈利·波特',
+                title: '活下來的男孩',
+                trait: '純粹膽識與直覺飛行',
+                desc: '額頭上有閃電疤痕，具備無畏直面邪惡的勇氣與天賦異稟的飛天掃帚直覺。'
+            },
+            ron: {
+                name: '榮恩·衛斯理',
+                title: '西洋棋戰術指揮官',
+                trait: '魔法界常識與戰術大局觀',
+                desc: '出身純血巫師家庭，深諳魔法界潛規則，關鍵時刻展現冷靜的西洋棋指揮與犧牲精神。'
+            },
+            hermione: {
+                name: '妙麗·格蘭傑',
+                title: '霍格華茲智囊',
+                trait: '嚴謹學術與冷靜邏輯推理',
+                desc: '背熟整本教科書的學霸，平時略顯焦慮固執，但危急時能以冷靜邏輯破解致命難題。'
+            },
+            custom: {
+                name: '艾倫·斯特林',
+                title: '霍格華茲新生',
+                trait: '自由意志與無限潛能',
+                desc: '來自麻瓜世界的神祕新生，與夥伴並肩作戰，用自己的選擇寫下霍格華茲傳奇。'
+            }
+        };
+
+        function getCampaign() {
+            return HouseCampaigns[GameState.house] || HouseCampaigns['葛來分多'];
+        }
+
+        function updateHUD() {
+            const hud = document.getElementById('gameHud');
+            hud.classList.remove('hidden');
+            document.getElementById('hudAvatar').innerHTML = Silhouettes[GameState.roleId];
+            document.getElementById('hudName').textContent = GameState.playerName;
+            document.getElementById('hudTrait').textContent = `特質：${GameState.traitDesc}`;
+            
+            const badge = document.getElementById('hudHouseBadge');
+            badge.textContent = GameState.house;
+            badge.className = `text-[11px] px-2 py-0.5 rounded-full text-amber-100 border border-amber-400/50 font-semibold ${GameState.houseColor}`;
+            
+            document.getElementById('hudPoints').textContent = GameState.points;
+            document.getElementById('invItems').textContent = GameState.inventory.join('、');
+        }
+
+        function addPoints(pts) {
+            GameState.points = Math.max(0, GameState.points + pts);
+            updateHUD();
+            triggerStarBurst();
+        }
+
+        function renderDialogueBox(speakerKey, speakerName, speakerTitle, text, extraHtml = '') {
+            return `
+                <div class="flex flex-col sm:flex-row items-start gap-4 bg-amber-950/10 border border-amber-900/25 rounded-xl p-4 sm:p-5 shadow-inner">
+                    <div class="flex sm:flex-col items-center gap-3 sm:w-24 shrink-0">
+                        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-slate-900 border-2 border-amber-700/80 shadow-md overflow-hidden p-1">
+                            ${Silhouettes[speakerKey] || Silhouettes.custom}
+                        </div>
+                        <div class="sm:text-center">
+                            <div class="font-bold text-amber-950 text-sm sm:text-base leading-tight">${speakerName}</div>
+                            <div class="text-[11px] text-amber-900/75 font-semibold">${speakerTitle}</div>
+                        </div>
+                    </div>
+                    <div class="flex-1 space-y-3 text-sm sm:text-base leading-relaxed text-amber-950">
+                        <p>${text}</p>
+                        ${extraHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        /**
+         * 通用過場動畫頁（拉長沉浸節奏，增加魔法視覺轉場）
+         */
+        function playTransitionScene(badgeText, titleText, descText, iconEmoji, nextFn) {
+            AudioEngine.playTone(392, 'sine', 0.4, 0.1, 0);
+            AudioEngine.playTone(587.33, 'sine', 0.5, 0.1, 0.18);
+            triggerStarBurst();
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter flex flex-col items-center justify-center text-center py-8 space-y-5 my-auto">
+                    <div class="relative w-24 h-24 flex items-center justify-center">
+                        <div class="absolute inset-0 rounded-full border-2 border-dashed border-amber-700/60 animate-swirl"></div>
+                        <div class="text-5xl animate-float">${iconEmoji}</div>
+                    </div>
+                    <div class="inline-block px-3.5 py-1 rounded-full bg-amber-900/15 text-amber-950 text-xs font-bold tracking-widest">
+                        ${badgeText}
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-amber-950">${titleText}</h2>
+                    <p class="text-sm sm:text-base text-amber-950/85 max-w-md leading-relaxed">${descText}</p>
+                    <div class="pt-3">
+                        <button id="transNextBtn" class="magic-btn px-7 py-3 rounded-xl font-bold text-sm sm:text-base cursor-pointer">
+                            ✨ 繼續前進
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('transNextBtn').onclick = () => {
+                AudioEngine.playClick();
+                nextFn();
+            };
+        }
+
+        /**
+         * 通用「關卡玩法事先說明頁」（每個小遊戲開始前必經的一頁）
+         */
+        function renderLevelInstructionPage(levelTag, levelTitle, storyIntro, rulesList, startBtnLabel, startCallback) {
+            const camp = getCampaign();
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/20 pb-2.5">
+                        <div>
+                            <span class="text-xs font-bold px-2.5 py-0.5 rounded ${camp.colorClass} text-amber-100">${camp.icon} ${GameState.house}專屬路線 • ${levelTag}</span>
+                            <h2 class="text-xl sm:text-2xl font-black text-amber-950 mt-1">${levelTitle}</h2>
+                        </div>
+                    </div>
+
+                    <div class="bg-amber-950/10 border border-amber-900/25 rounded-xl p-4 text-sm sm:text-base text-amber-950 leading-relaxed">
+                        <p>${storyIntro}</p>
+                    </div>
+
+                    <div class="bg-slate-950/90 text-amber-100 rounded-xl p-4 sm:p-5 border border-amber-500/40 shadow-lg space-y-2.5">
+                        <div class="flex items-center gap-2 text-amber-400 font-bold text-sm sm:text-base border-b border-amber-500/20 pb-1.5">
+                            <span>📜 魔法試煉進行方法說明</span>
+                        </div>
+                        <ul class="space-y-2 text-xs sm:text-sm text-amber-100/95 leading-relaxed">
+                            ${rulesList.map((rule, i) => `
+                                <li class="flex items-start gap-2">
+                                    <span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-500/20 text-amber-300 font-bold text-xs shrink-0 mt-0.5">${i + 1}</span>
+                                    <span>${rule}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="text-center pt-2">
+                        <button id="beginMiniGameBtn" class="magic-btn px-8 py-3.5 rounded-xl font-bold text-base tracking-wide cursor-pointer shadow-xl">
+                            ${startBtnLabel}
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('beginMiniGameBtn').onclick = () => {
+                AudioEngine.playClick();
+                startCallback();
+            };
+        }
+
+        /**
+         * ==========================================
+         * 5. 關卡與劇情流程控制器
+         * ==========================================
+         */
+        const stage = document.getElementById('stageContainer');
+
+        // 【階段 0：角色選擇畫面】
+        function renderCharacterSelect() {
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-5">
+                    <div class="text-center border-b border-amber-900/20 pb-4">
+                        <p class="font-magic-en text-xs tracking-[0.2em] text-amber-900/70 uppercase">Harry Potter and the Philosopher's Stone</p>
+                        <h1 class="text-2xl sm:text-3xl font-black text-amber-950 mt-1">四大學院專屬冒險與禁區試煉</h1>
+                        <p class="text-xs sm:text-sm text-amber-900/80 mt-1">請選擇你在這趟霍格華茲冒險中要扮演的角色：</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="roleGrid">
+                        ${Object.keys(RolePresets).map(key => {
+                            const r = RolePresets[key];
+                            const isSelected = GameState.roleId === key;
+                            return `
+                                <div onclick="selectRole('${key}')" id="card_${key}" class="char-card ${isSelected ? 'selected' : ''} rounded-xl p-3 cursor-pointer flex flex-col items-center text-center">
+                                    <div class="w-16 h-16 rounded-full bg-slate-900 border-2 border-amber-600/70 mb-2 overflow-hidden p-1 shadow">
+                                        ${Silhouettes[key]}
+                                    </div>
+                                    <div class="font-bold text-sm text-amber-950">${key === 'custom' ? '自訂新生' : r.name}</div>
+                                    <div class="text-[11px] text-red-900 font-semibold mt-0.5">${r.title}</div>
+                                </div>
+                            `;
+                        }).join('')}
+                    </div>
+
+                    <div id="roleDetailBox" class="bg-amber-900/10 border border-amber-900/20 rounded-xl p-4 text-sm space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                            <div>
+                                <span class="font-bold text-base text-amber-950" id="detailName">${RolePresets[GameState.roleId].name}</span>
+                                <span class="ml-2 text-xs px-2 py-0.5 rounded bg-amber-800/20 text-amber-950 font-semibold" id="detailTrait">${RolePresets[GameState.roleId].trait}</span>
+                            </div>
+                        </div>
+                        <p id="detailDesc" class="text-amber-950/90 text-xs sm:text-sm leading-relaxed">${RolePresets[GameState.roleId].desc}</p>
+                        
+                        <div id="customNameWrapper" class="${GameState.roleId === 'custom' ? 'block' : 'hidden'} pt-2 border-t border-amber-900/15">
+                            <label class="block text-xs font-bold text-amber-950 mb-1">輸入你的巫師姓名：</label>
+                            <input type="text" id="customNameInput" value="艾倫·斯特林" maxlength="12" placeholder="請輸入名字..." class="w-full sm:w-64 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-800/40 text-amber-950 font-bold focus:outline-none focus:border-red-800">
+                        </div>
+                    </div>
+
+                    <div class="text-center pt-2">
+                        <button onclick="confirmRoleAndStart()" class="magic-btn px-8 py-3.5 rounded-xl font-bold text-base sm:text-lg tracking-wider cursor-pointer">
+                            🎩 戴上分類帽，開啟學院專屬劇情
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function selectRole(roleKey) {
+            AudioEngine.playClick();
+            GameState.roleId = roleKey;
+            document.querySelectorAll('.char-card').forEach(el => el.classList.remove('selected'));
+            document.getElementById(`card_${roleKey}`).classList.add('selected');
+            
+            const preset = RolePresets[roleKey];
+            document.getElementById('detailName').textContent = preset.name;
+            document.getElementById('detailTrait').textContent = preset.trait;
+            document.getElementById('detailDesc').textContent = preset.desc;
+            
+            const customWrap = document.getElementById('customNameWrapper');
+            if (roleKey === 'custom') customWrap.classList.remove('hidden');
+            else customWrap.classList.add('hidden');
+        }
+
+        function confirmRoleAndStart() {
+            AudioEngine.playSuccess();
+            const preset = RolePresets[GameState.roleId];
+            if (GameState.roleId === 'custom') {
+                const inputVal = document.getElementById('customNameInput').value.trim();
+                GameState.playerName = inputVal || '霍格華茲新生';
+            } else {
+                GameState.playerName = preset.name;
+            }
+            GameState.traitDesc = preset.trait;
+            updateHUD();
+            renderSortingHatStage();
+        }
+
+        // 【序幕：分類帽的意志考驗（四大學院分流點）】
+        function renderSortingHatStage() {
+            document.getElementById('hudStageLabel').textContent = '序幕：分類帽的抉擇';
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-5">
+                    <div class="flex items-center justify-between border-b border-amber-900/20 pb-3">
+                        <h2 class="text-xl sm:text-2xl font-black text-amber-950">序幕：分類帽的意志考驗</h2>
+                        <span class="text-xs font-bold px-2.5 py-1 rounded bg-amber-900/15 text-amber-950">四大學院各自擁有獨立 5 關劇情！</span>
+                    </div>
+
+                    ${renderDialogueBox(
+                        GameState.roleId,
+                        '分類帽（內心低語）',
+                        '霍格華茲古老神器',
+                        `「唔……真有趣，<strong>${GameState.playerName}</strong>。你選擇的學院將決定你接下來在霍格華茲的 <strong>五道專屬試煉與劇情路線</strong>。告訴我，你內心真正嚮往哪裡？」`
+                    )}
+
+                    <div class="bg-amber-950/10 rounded-xl p-4 border border-amber-900/20 space-y-3">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <button onclick="finishSorting('葛來分多', 'bg-red-900', '「不要史萊哲林！請分我去葛來分多！」')" class="p-3.5 rounded-xl bg-red-900 hover:bg-red-800 text-amber-100 border border-amber-400/50 text-left transition cursor-pointer shadow">
+                                <div class="font-bold text-sm sm:text-base">🦁 葛來分多（勇敢與膽識路線）</div>
+                                <div class="text-xs text-amber-200/80 mt-0.5">海格的木笛、搜捕手飛行、三人組禁區決戰</div>
+                            </button>
+                            <button onclick="finishSorting('雷文克勞', 'bg-blue-900', '「我渴望追求真理與智慧的邏輯。」')" class="p-3.5 rounded-xl bg-blue-950 hover:bg-blue-900 text-amber-100 border border-amber-400/50 text-left transition cursor-pointer shadow">
+                                <div class="font-bold text-sm sm:text-base">🦅 雷文克勞（智慧與真理路線）</div>
+                                <div class="text-xs text-amber-200/80 mt-0.5">煉金手稿解讀、星象軌跡、威嚴銅鷹哲學謎題</div>
+                            </button>
+                            <button onclick="finishSorting('赫夫帕夫', 'bg-amber-700', '「我願為了夥伴與正義忠誠到底。」')" class="p-3.5 rounded-xl bg-amber-800 hover:bg-amber-700 text-amber-100 border border-amber-400/50 text-left transition cursor-pointer shadow">
+                                <div class="font-bold text-sm sm:text-base">🦡 赫夫帕夫（忠誠與草藥路線）</div>
+                                <div class="text-xs text-amber-200/80 mt-0.5">溫室白鮮草藥、支援夥伴、無私之鏡考驗</div>
+                            </button>
+                            <button onclick="finishSorting('史萊哲林', 'bg-emerald-900', '「我要善用我的野心與力量達成目標。」')" class="p-3.5 rounded-xl bg-emerald-950 hover:bg-emerald-900 text-amber-100 border border-amber-400/50 text-left transition cursor-pointer shadow">
+                                <div class="font-bold text-sm sm:text-base">🐍 史萊哲林（野心與榮耀路線）</div>
+                                <div class="text-xs text-amber-200/80 mt-0.5">地窖密函截獲、石內卜暗中指示、駕馭野心之鏡</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function finishSorting(house, colorClass, quote) {
+            AudioEngine.playClick();
+            const hatDeliberations = {
+                '葛來分多': {
+                    glowColor: 'from-red-950 via-amber-950 to-slate-950',
+                    borderColor: 'border-red-500/70',
+                    textColor: 'text-amber-200',
+                    hesitateLines: [
+                        '「唔……嗯……Let me think……真難辦，非常難辦。我看見你心裡藏著一股不凡的潛能與勇氣，其實史萊哲林明明能助你走向輝煌……」',
+                        '「什麼？你在心裡一直默念『不要史萊哲林』？Hmm... difficult, very difficult... 好吧，既然你的意志如此堅定，那就去——」'
+                    ]
+                },
+                '雷文克勞': {
+                    glowColor: 'from-blue-950 via-indigo-950 to-slate-950',
+                    borderColor: 'border-blue-400/70',
+                    textColor: 'text-sky-200',
+                    hesitateLines: [
+                        '「喔……Let me see... 多麼敏銳又充滿好奇心的頭腦！葛來分多的勇氣固然可貴，但你對真理與知識的渴望更為深沉……」',
+                        '「邏輯與智慧才是你真正的武器，難道要分去那裡嗎？嗯……I see where to put you... 看清楚了，你屬於——」'
+                    ]
+                },
+                '赫夫帕夫': {
+                    glowColor: 'from-amber-900 via-yellow-950 to-slate-950',
+                    borderColor: 'border-yellow-400/70',
+                    textColor: 'text-yellow-100',
+                    hesitateLines: [
+                        '「啊……Let me think... 一顆無比真誠、願意為夥伴兩肋插刀的心！這份特質在許多學院都會大放異彩……」',
+                        '「你不求虛浮名利，只願堅守正義與忠誠……嗯……Right then, okay... 我知道該把你送到哪裡了——」'
+                    ]
+                },
+                '史萊哲林': {
+                    glowColor: 'from-emerald-950 via-teal-950 to-slate-950',
+                    borderColor: 'border-emerald-400/70',
+                    textColor: 'text-emerald-200',
+                    hesitateLines: [
+                        '「嘶……Let me think... 有意思！你並沒有像其他人那樣畏懼內心的野心，反而渴望證明自己的力量……」',
+                        '「雖然你也有幾分葛來分多的膽識，但這份追求卓越的決心……Hmm, yes... 沒錯，你註定屬於——」'
+                    ]
+                }
+            };
+
+            const script = hatDeliberations[house];
+            AudioEngine.playTone(220, 'triangle', 0.4, 0.12, 0);
+            AudioEngine.playTone(196, 'triangle', 0.5, 0.12, 0.35);
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-5 py-2">
+                    <div class="text-center border-b border-amber-900/20 pb-2">
+                        <span class="text-xs font-bold px-3 py-1 rounded-full bg-amber-900/15 text-amber-950">分類帽正在深入探測你的內心……</span>
+                    </div>
+
+                    <div class="rounded-2xl bg-gradient-to-b ${script.glowColor} border-2 ${script.borderColor} p-5 sm:p-7 text-center shadow-2xl space-y-4">
+                        <div class="w-28 h-28 sm:w-32 sm:h-32 mx-auto">
+                            ${Silhouettes.sortingHat}
+                        </div>
+                        <div class="font-bold text-amber-400 text-sm tracking-widest">🎩 分類帽（喃喃自語）</div>
+                        <p id="hatSpeechText" class="${script.textColor} text-sm sm:text-base leading-relaxed min-h-[4.5rem] font-semibold"></p>
+                    </div>
+                </div>
+            `;
+
+            function typeWriterHat(text, elementId, speedMs, onComplete) {
+                const el = document.getElementById(elementId);
+                if (!el) return;
+                el.textContent = '';
+                let i = 0;
+                const timer = setInterval(() => {
+                    if (!document.getElementById(elementId)) { clearInterval(timer); return; }
+                    el.textContent += text.charAt(i);
+                    if (i % 4 === 0) AudioEngine.playTone(170 + (i % 3) * 20, 'triangle', 0.06, 0.04, 0);
+                    i++;
+                    if (i >= text.length) {
+                        clearInterval(timer);
+                        if (onComplete) setTimeout(onComplete, 1300);
+                    }
+                }, speedMs);
+            }
+
+            typeWriterHat(script.hesitateLines[0], 'hatSpeechText', 52, () => {
+                AudioEngine.playTone(246.94, 'triangle', 0.45, 0.12, 0);
+                typeWriterHat(script.hesitateLines[1], 'hatSpeechText', 52, () => {
+                    AudioEngine.playSuccess();
+                    GameState.house = house;
+                    GameState.houseColor = colorClass;
+                    addPoints(20);
+                    const camp = getCampaign();
+
+                    stage.innerHTML = `
+                        <div class="animate-scene-enter space-y-6 text-center py-4">
+                            <div class="inline-block px-4 py-1.5 rounded-full ${colorClass} text-amber-200 font-bold text-sm border border-amber-400/60 shadow-lg animate-bounce">
+                                分類帽張大帽簷高喊：「${house}！！」
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl font-black text-amber-950">${camp.icon} 歡迎來到 ${house} 學院！</h2>
+                            <p class="text-sm sm:text-base text-amber-950/90 max-w-lg mx-auto leading-relaxed">
+                                你在心中堅定地說出了${quote}。現在，<strong>${camp.mentorName}</strong> 已經在學院交誼廳等候你，準備開啟專屬於 <strong>${house}</strong> 的五大試煉！
+                            </p>
+                            <div class="pt-3">
+                                <button onclick="startHouseRoute()" class="magic-btn px-8 py-3.5 rounded-xl font-bold text-base cursor-pointer">
+                                    📜 進入 ${house} 專屬第一關說明
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        function startHouseRoute() {
+            AudioEngine.playClick();
+            if (GameState.house === '雷文克勞') {
+                prepRavenclaw1();
+            } else if (GameState.house === '赫夫帕夫') {
+                prepHufflepuff1();
+            } else if (GameState.house === '史萊哲林') {
+                prepSlytherin1();
+            } else {
+                prepLevel1();
+            }
+        }
+
+        /**
+         * ==========================================
+         * 🦅 雷文克勞專屬獨立遊戲路線 (智慧、翻牌記憶與星象光學)
+         * ==========================================
+         */
+        function prepRavenclaw1() {
+            document.getElementById('hudStageLabel').textContent = '雷文克勞第一關：說明書';
+            renderLevelInstructionPage(
+                '雷文克勞試煉（1 / 5）',
+                '第一關：古代魔文記憶配對陣',
+                '孚立維教授在圖書館禁書區設下了古代魔文封印！你必須憑藉過人的記憶力，找出所有成對的煉金術符號。',
+                [
+                    '畫面上共有 <strong>12 張覆蓋的古代魔文石板</strong>（共 6 對符號）。',
+                    '每次點擊翻開兩張石板，若圖案相同即可消除；若不同則會重新蓋上。',
+                    '在 <strong>35 秒內</strong> 完成全部 6 對配對即可解開阿尼·尼樂的煉金手稿！'
+                ],
+                '🦅 啟動古代魔文陣，開始第一關！',
+                startRavenclaw1
+            );
+        }
+
+        function startRavenclaw1() {
+            document.getElementById('hudStageLabel').textContent = '雷文克勞第一關：進行中';
+            const symbols = ['🔮', '⚗️', '📜', '🦉', '⚖️', '✨'];
+            let cards = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+            let flipped = [];
+            let matchedCount = 0;
+            let lockBoard = false;
+            let timeLeft = 35;
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/20 pb-2">
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-black text-amber-950">🦅 第一關：古代魔文記憶配對陣</h2>
+                            <p class="text-xs text-amber-900/80">翻開石板並配對全部 <strong>6 對</strong> 煉金魔文！</p>
+                        </div>
+                        <div class="flex gap-3 text-xs sm:text-sm font-bold">
+                            <span class="px-2.5 py-1 rounded bg-blue-900/15 text-blue-950">已配對：<span id="rvMatch">0</span> / 6</span>
+                            <span class="px-2.5 py-1 rounded bg-red-900/15 text-red-900">剩餘：<span id="rvTime">${timeLeft}</span>s</span>
+                        </div>
+                    </div>
+
+                    <div id="rvGrid" class="grid grid-cols-4 gap-2.5 sm:gap-3 bg-slate-950/90 p-4 rounded-xl border border-blue-400/40">
+                        ${cards.map((sym, idx) => `
+                            <button id="rvCard_${idx}" onclick="flipRvCard(${idx})" class="h-16 sm:h-20 rounded-xl bg-blue-950 hover:bg-blue-900 border-2 border-amber-400/50 text-2xl sm:text-3xl flex items-center justify-center font-bold text-amber-200 shadow-md transition-all cursor-pointer">
+                                ❓
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            const timer = setInterval(() => {
+                if (!document.getElementById('rvTime')) { clearInterval(timer); return; }
+                timeLeft--;
+                document.getElementById('rvTime').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    AudioEngine.playError();
+                    GameState.mistakes++;
+                    document.getElementById('rvGrid').innerHTML = `
+                        <div class="col-span-full text-center py-8 space-y-3 text-amber-100">
+                            <div class="font-bold text-lg text-red-400">⏳ 魔文石板重新封印了！</div>
+                            <button onclick="startRavenclaw1()" class="magic-btn px-5 py-2 rounded-xl text-sm font-bold cursor-pointer">🔄 重新挑戰配對陣</button>
+                        </div>
+                    `;
+                }
+            }, 1000);
+
+            window.flipRvCard = function(idx) {
+                if (lockBoard) return;
+                const btn = document.getElementById(`rvCard_${idx}`);
+                if (!btn || btn.dataset.matched === '1' || flipped.includes(idx)) return;
+
+                AudioEngine.playClick();
+                btn.textContent = cards[idx];
+                btn.classList.add('bg-amber-100', 'text-slate-900', 'scale-105');
+                btn.classList.remove('bg-blue-950', 'text-amber-200');
+                flipped.push(idx);
+
+                if (flipped.length === 2) {
+                    lockBoard = true;
+                    const [i1, i2] = flipped;
+                    if (cards[i1] === cards[i2]) {
+                        AudioEngine.playTone(784, 'sine', 0.2, 0.12);
+                        document.getElementById(`rvCard_${i1}`).dataset.matched = '1';
+                        document.getElementById(`rvCard_${i2}`).dataset.matched = '1';
+                        matchedCount++;
+                        document.getElementById('rvMatch').textContent = matchedCount;
+                        flipped = [];
+                        lockBoard = false;
+                        if (matchedCount === 6) {
+                            clearInterval(timer);
+                            AudioEngine.playSuccess();
+                            GameState.inventory.push('尼樂的煉金手稿');
+                            addPoints(45);
+                            playTransitionScene(
+                                '雷文克勞第一關通關（+45分）',
+                                '登上天文塔：星象折射儀',
+                                '你成功解讀了煉金手稿！接下來必須前往天文塔頂端，校準星象三稜鏡的角度以開啟禁區密道。',
+                                '🔭',
+                                prepRavenclaw2
+                            );
+                        }
+                    } else {
+                        GameState.mistakes++;
+                        setTimeout(() => {
+                            [i1, i2].forEach(i => {
+                                const b = document.getElementById(`rvCard_${i}`);
+                                if (b) {
+                                    b.textContent = '❓';
+                                    b.classList.remove('bg-amber-100', 'text-slate-900', 'scale-105');
+                                    b.classList.add('bg-blue-950', 'text-amber-200');
+                                }
+                            });
+                            flipped = [];
+                            lockBoard = false;
+                        }, 650);
+                    }
+                }
+            };
+        }
+
+        function prepRavenclaw2() {
+            document.getElementById('hudStageLabel').textContent = '雷文克勞第二關：說明書';
+            renderLevelInstructionPage(
+                '雷文克勞試煉（2 / 5）',
+                '第二關：星象三稜鏡光束校準',
+                '孚立維教授在門鎖上設計了光學折射機關！轉動三座星象稜鏡的角度，讓星光精準命中中央的藍寶石鎖孔。',
+                [
+                    '畫面上有 <strong>3 座旋轉星象稜鏡（甲、乙、丙）</strong>，每座各有 4 個刻度（0°、90°、180°、270°）。',
+                    '點擊稜鏡按鈕調整角度，使三座稜鏡同時達到共振共鳴狀態。',
+                    '觀察下方的「星光共鳴度」，達到 <strong>100%</strong> 即可開啟禁區之門！'
+                ],
+                '🔭 開始校準星象稜鏡！',
+                startRavenclaw2
+            );
+        }
+
+        function startRavenclaw2() {
+            document.getElementById('hudStageLabel').textContent = '雷文克勞第二關：進行中';
+            const targetAngles = [
+                Math.floor(Math.random() * 4) * 90,
+                Math.floor(Math.random() * 4) * 90,
+                Math.floor(Math.random() * 4) * 90
+            ];
+            let currentAngles = [
+                (targetAngles[0] + 90) % 360,
+                (targetAngles[1] + 180) % 360,
+                (targetAngles[2] + 270) % 360
+            ];
+
+            function calcResonance() {
+                let score = 0;
+                for (let i = 0; i < 3; i++) {
+                    const diff = Math.abs(currentAngles[i] - targetAngles[i]);
+                    if (diff === 0) score += 34;
+                    else if (diff === 90 || diff === 270) score += 16;
+                }
+                return Math.min(100, score);
+            }
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4 text-center">
+                    <div class="border-b border-amber-900/20 pb-2 text-left">
+                        <h2 class="text-lg sm:text-xl font-black text-amber-950">🦅 第二關：星象三稜鏡光束校準</h2>
+                        <p class="text-xs text-amber-900/80">點擊旋轉三座稜鏡，將下方的「星光共鳴度」調校至 <strong>100%</strong>！</p>
+                    </div>
+
+                    <div class="bg-slate-950 text-sky-100 p-5 rounded-xl border border-blue-400/50 space-y-4">
+                        <div class="grid grid-cols-3 gap-3">
+                            ${['甲稜鏡', '乙稜鏡', '丙稜鏡'].map((name, idx) => `
+                                <div class="p-3 rounded-xl bg-blue-950/70 border border-sky-400/40 flex flex-col items-center space-y-2">
+                                    <div class="text-xs font-bold text-sky-300">${name}</div>
+                                    <div id="prismIcon_${idx}" class="text-3xl transition-transform duration-300" style="transform: rotate(${currentAngles[idx]}deg)">💠</div>
+                                    <div id="prismDeg_${idx}" class="text-xs font-mono text-amber-300">${currentAngles[idx]}°</div>
+                                    <button onclick="rotatePrism(${idx})" class="magic-btn px-3 py-1 rounded-lg text-xs font-bold cursor-pointer">🔄 旋轉 90°</button>
+                                </div>
+                            `).join('')}
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <div class="text-xs font-bold text-amber-300">✨ 星光折射共鳴度：<span id="prismResPct">${calcResonance()}</span>%</div>
+                            <div class="w-full h-4 bg-slate-800 rounded-full overflow-hidden border border-sky-400/40">
+                                <div id="prismResBar" class="h-full bg-gradient-to-r from-blue-600 via-sky-400 to-amber-300 transition-all duration-300" style="width: ${calcResonance()}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            window.rotatePrism = function(idx) {
+                currentAngles[idx] = (currentAngles[idx] + 90) % 360;
+                AudioEngine.playTone(440 + currentAngles[idx], 'sine', 0.18, 0.12);
+                document.getElementById(`prismIcon_${idx}`).style.transform = `rotate(${currentAngles[idx]}deg)`;
+                document.getElementById(`prismDeg_${idx}`).textContent = `${currentAngles[idx]}°`;
+
+                const pct = calcResonance();
+                document.getElementById('prismResPct').textContent = pct;
+                document.getElementById('prismResBar').style.width = `${pct}%`;
+
+                if (pct === 100) {
+                    AudioEngine.playSuccess();
+                    GameState.inventory.push('星象藍寶石鑰匙');
+                    addPoints(50);
+                    setTimeout(() => {
+                        playTransitionScene(
+                            '雷文克勞第二關通關（+50分）',
+                            '禁區地底：聲波頻率與威嚴銅鷹',
+                            '星光精準射入鎖孔！你步入三樓禁區深處，準備迎接三頭犬的聲波考驗與雷文克勞銅鷹謎題。',
+                            '🦅',
+                            prepLevel3A
+                        );
+                    }, 500);
+                }
+            };
+        }
+
+        /**
+         * ==========================================
+         * 🦡 赫夫帕夫專屬獨立遊戲路線 (魔藥大釜調配與魔蘋果照護)
+         * ==========================================
+         */
+        function prepHufflepuff1() {
+            document.getElementById('hudStageLabel').textContent = '赫夫帕夫第一關：說明書';
+            renderLevelInstructionPage(
+                '赫夫帕夫試煉（1 / 5）',
+                '第一關：芽菜教授的治愈魔藥大釜',
+                '芽菜教授指導你調配一鍋能抵禦黑魔法與植物毒素的「白鮮安神藥劑」。必須嚴格依照配方順序投入藥材！',
+                [
+                    '請依照羊皮紙上的 <strong>4 道配方順序</strong>，依序點擊對應的藥材投入大釜。',
+                    '藥材順序為：<strong>① 蜂蜜水 → ② 碎白鮮葉 → ③ 獨角獸銀毛 → ④ 順時針攪拌</strong>。',
+                    '若放錯順序大釜會冒出黑煙並必須重新調配！'
+                ],
+                '🦡 點燃大釜爐火，開始調配！',
+                startHufflepuff1
+            );
+        }
+
+        function startHufflepuff1() {
+            document.getElementById('hudStageLabel').textContent = '赫夫帕夫第一關：進行中';
+            const recipe = ['honey', 'dittany', 'unicorn', 'stir'];
+            let step = 0;
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4 text-center">
+                    <div class="border-b border-amber-900/20 pb-2 text-left">
+                        <h2 class="text-lg sm:text-xl font-black text-amber-950">🦡 第一關：芽菜教授的治愈魔藥大釜</h2>
+                        <p class="text-xs text-amber-900/80">配方順序：<strong>① 蜂蜜水 → ② 碎白鮮葉 → ③ 獨角獸銀毛 → ④ 順時針攪拌</strong></p>
+                    </div>
+
+                    <div class="bg-slate-950 text-amber-100 p-5 rounded-xl border border-amber-500/50 space-y-3">
+                        <div class="text-5xl animate-float" id="cauldronIcon">🍯</div>
+                        <div class="text-xs sm:text-sm font-bold text-amber-300" id="cauldronStatus">大釜已加熱！請投入第 1 項材料：蜂蜜水</div>
+                        <div class="text-xs text-amber-400/80">目前完成度：<span id="brewStep">0</span> / 4</div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                        <button onclick="addIngredient('dittany')" class="magic-btn py-3 px-2 rounded-xl font-bold text-xs sm:text-sm cursor-pointer">🌿 碎白鮮葉</button>
+                        <button onclick="addIngredient('stir')" class="magic-btn py-3 px-2 rounded-xl font-bold text-xs sm:text-sm cursor-pointer">🥄 順時針攪拌</button>
+                        <button onclick="addIngredient('honey')" class="magic-btn py-3 px-2 rounded-xl font-bold text-xs sm:text-sm cursor-pointer">🍯 純淨蜂蜜水</button>
+                        <button onclick="addIngredient('unicorn')" class="magic-btn py-3 px-2 rounded-xl font-bold text-xs sm:text-sm cursor-pointer">🦄 獨角獸銀毛</button>
+                    </div>
+                </div>
+            `;
+
+            window.addIngredient = function(item) {
+                if (item !== recipe[step]) {
+                    AudioEngine.playError();
+                    GameState.mistakes++;
+                    step = 0;
+                    document.getElementById('cauldronIcon').textContent = '💨';
+                    document.getElementById('cauldronStatus').innerHTML = '<span class="text-red-400">💥 順序錯了！大釜冒出黑煙，請從 ① 蜂蜜水重新開始！</span>';
+                    document.getElementById('brewStep').textContent = '0';
+                    return;
+                }
+                AudioEngine.playTone(523 + step * 110, 'sine', 0.25, 0.14);
+                step++;
+                document.getElementById('brewStep').textContent = step;
+                const hints = [
+                    '做得好！接著投入第 2 項：碎白鮮葉',
+                    '藥水泛起金光！接著投入第 3 項：獨角獸銀毛',
+                    '最後一步！請點擊「順時針攪拌」完成藥劑！',
+                    '✨ 完美的珍珠光澤治愈藥劑調配完成！'
+                ];
+                document.getElementById('cauldronIcon').textContent = step === 4 ? '✨' : '⚗️';
+                document.getElementById('cauldronStatus').textContent = hints[step - 1];
+
+                if (step === 4) {
+                    AudioEngine.playSuccess();
+                    GameState.inventory.push('白鮮安神藥劑');
+                    addPoints(45);
+                    setTimeout(() => {
+                        playTransitionScene(
+                            '赫夫帕夫第一關通關（+45分）',
+                            '第三溫室：躁動的魔蘋果幼苗',
+                            '你帶著親手調配的白鮮藥劑來到溫室通道，然而幾株受驚的魔蘋果幼苗正準備發出刺耳尖叫，必須在正確節奏安撫它們！',
+                            '🌱',
+                            prepHufflepuff2
+                        );
+                    }, 600);
+                }
+            };
+        }
+
+        function prepHufflepuff2() {
+            document.getElementById('hudStageLabel').textContent = '赫夫帕夫第二關：說明書';
+            renderLevelInstructionPage(
+                '赫夫帕夫試煉（2 / 5）',
+                '第二關：溫室魔蘋果幼苗安撫節奏',
+                '戴緊耳罩！當光球移動到中央「金色安撫區間」時按下安撫按鈕，溫柔地將魔蘋果重新種入溫暖的土壤中。',
+                [
+                    '畫面上方的光標會在軌道上左右來回移動。',
+                    '當光標進入中央的 <strong>綠色／金色安全區間</strong> 時，立刻點擊「🌱 溫柔覆土安撫」。',
+                    '成功安撫 <strong>4 次</strong> 即可讓所有魔蘋果安靜入睡（點偏會驚動它們並扣 1 次進度）！'
+                ],
+                '🦡 戴上耳罩，開始安撫魔蘋果！',
+                startHufflepuff2
+            );
+        }
+
+        function startHufflepuff2() {
+            document.getElementById('hudStageLabel').textContent = '赫夫帕夫第二關：進行中';
+            let pos = 10;
+            let dir = 1.6;
+            let calmCount = 0;
+            let finished = false;
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4 text-center">
+                    <div class="border-b border-amber-900/20 pb-2 text-left">
+                        <h2 class="text-lg sm:text-xl font-black text-amber-950">🦡 第二關：溫室魔蘋果幼苗安撫節奏</h2>
+                        <p class="text-xs text-amber-900/80">當光標進入中央<strong>綠色安撫區</strong>時按下按鈕（成功 <strong>4 次</strong>通關）！</p>
+                    </div>
+
+                    <div class="bg-slate-950 text-amber-100 p-5 rounded-xl border border-amber-500/50 space-y-5">
+                        <div class="text-4xl">🪴🌱🪴</div>
+                        <div class="text-xs font-bold text-amber-300">已安撫魔蘋果：<span id="mandrakeCount">0</span> / 4</div>
+
+                        <!-- 節奏軌道 -->
+                        <div class="relative w-full h-8 bg-slate-800 rounded-full border border-amber-400/40 overflow-hidden">
+                            <!-- 中央安全區 (36% ~ 64%) -->
+                            <div class="absolute top-0 bottom-0 left-[36%] w-[28%] bg-emerald-500/45 border-x-2 border-emerald-300"></div>
+                            <!-- 移動光標 -->
+                            <div id="mandrakeCursor" class="absolute top-0 bottom-0 w-3 bg-yellow-300 shadow-[0_0_12px_#fde047] rounded-full" style="left: 10%"></div>
+                        </div>
+
+                        <button onclick="sootheMandrake()" class="magic-btn px-8 py-3.5 rounded-xl font-bold text-base cursor-pointer">
+                            🌱 溫柔覆土安撫
+                        </button>
+                        <div id="mandrakeMsg" class="text-xs text-amber-200/80 min-h-[1rem]">抓準光標經過中央綠色區域的瞬間！</div>
+                    </div>
+                </div>
+            `;
+
+            const anim = setInterval(() => {
+                if (finished || !document.getElementById('mandrakeCursor')) {
+                    clearInterval(anim);
+                    return;
+                }
+                pos += dir;
+                if (pos >= 94 || pos <= 2) dir = -dir;
+                document.getElementById('mandrakeCursor').style.left = `${pos}%`;
+            }, 20);
+
+            window.sootheMandrake = function() {
+                if (finished) return;
+                if (pos >= 34 && pos <= 66) {
+                    AudioEngine.playTone(659.25, 'sine', 0.25, 0.14);
+                    calmCount++;
+                    document.getElementById('mandrakeCount').textContent = calmCount;
+                    document.getElementById('mandrakeMsg').innerHTML = '<span class="text-emerald-400 font-bold">✨ 精準安撫！魔蘋果舒服地鑽進了泥土裡！</span>';
+                    dir = dir > 0 ? dir + 0.25 : dir - 0.25;
+                    if (calmCount >= 4) {
+                        finished = true;
+                        clearInterval(anim);
+                        AudioEngine.playSuccess();
+                        addPoints(50);
+                        setTimeout(() => {
+                            playTransitionScene(
+                                '赫夫帕夫第二關通關（+50分）',
+                                '潛入禁區：守護夥伴的決心',
+                                '溫室通道已安全通過！你帶著白鮮藥劑趕往三樓禁區，準備用溫柔笛聲與陽光咒幫助受困的夥伴。',
+                                '🦡',
+                                prepLevel3A
+                            );
+                        }, 550);
+                    }
+                } else {
+                    AudioEngine.playError();
+                    GameState.mistakes++;
+                    calmCount = Math.max(0, calmCount - 1);
+                    document.getElementById('mandrakeCount').textContent = calmCount;
+                    document.getElementById('mandrakeMsg').innerHTML = '<span class="text-red-400 font-bold">⚠️ 按偏了！魔蘋果尖叫了一聲（進度 -1）！</span>';
+                }
+            };
+        }
+
+        /**
+         * ==========================================
+         * 🐍 史萊哲林專屬獨立遊戲路線 (地窖潛行與蛇佬腔密碼破譯)
+         * ==========================================
+         */
+        function prepSlytherin1() {
+            document.getElementById('hudStageLabel').textContent = '史萊哲林第一關：說明書';
+            renderLevelInstructionPage(
+                '史萊哲林試煉（1 / 5）',
+                '第一關：宵禁潛行躲避管理員提燈',
+                '夜深了，你必須在不被管理員飛七與拿樂絲太太發現的情況下，潛行穿過地窖長廊前往三樓禁區蒐集奎若的罪證！',
+                [
+                    '畫面上有 <strong>「潛行前進」</strong> 與 <strong>「隱蔽躲藏」</strong> 兩個按鈕。',
+                    '當上方狀態顯示 <strong>「🟢 走廊無人（安全）」</strong> 時，按住或連點「潛行前進」推進距離至 <strong>100%</strong>。',
+                    '當出現 <strong>「🔴 提燈光束掃描中！」</strong> 警告時，必須立刻點擊「隱蔽躲藏」進入陰影，否則會被發現並倒退進度！'
+                ],
+                '🐍 披上暗影斗篷，開始潛行！',
+                startSlytherin1
+            );
+        }
+
+        function startSlytherin1() {
+            document.getElementById('hudStageLabel').textContent = '史萊哲林第一關：進行中';
+            let progress = 0;
+            let isDanger = false;
+            let isHiding = false;
+            let done = false;
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4 text-center">
+                    <div class="border-b border-amber-900/20 pb-2 text-left">
+                        <h2 class="text-lg sm:text-xl font-black text-amber-950">🐍 第一關：宵禁潛行躲避管理員提燈</h2>
+                        <p class="text-xs text-amber-900/80">安全時前進至 <strong>100%</strong>，紅燈掃描時務必點擊「隱蔽躲藏」！</p>
+                    </div>
+
+                    <div class="bg-slate-950 text-emerald-100 p-5 rounded-xl border border-emerald-500/50 space-y-4">
+                        <div id="stealthAlert" class="py-2 px-4 rounded-lg bg-emerald-900/60 border border-emerald-400 text-emerald-200 font-bold text-sm sm:text-base">
+                            🟢 走廊無人（安全，快前進！）
+                        </div>
+
+                        <div class="w-full h-5 bg-slate-800 rounded-full overflow-hidden border border-emerald-400/40">
+                            <div id="stealthBar" class="h-full bg-gradient-to-r from-emerald-700 to-emerald-400 transition-all duration-150" style="width: 0%"></div>
+                        </div>
+                        <div class="text-xs text-emerald-300">潛行距離：<span id="stealthPct">0</span>% ｜ 狀態：<span id="hideStateText">移動中</span></div>
+
+                        <div class="flex justify-center gap-3 pt-1">
+                            <button onclick="stepForward()" class="magic-btn px-5 py-3 rounded-xl font-bold text-sm cursor-pointer">👣 潛行前進 (+10%)</button>
+                            <button onclick="hideInShadow()" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-400 text-amber-200 font-bold text-sm cursor-pointer">🌑 隱蔽躲藏</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const patrolTimer = setInterval(() => {
+                if (done || !document.getElementById('stealthAlert')) {
+                    clearInterval(patrolTimer);
+                    return;
+                }
+                isDanger = !isDanger;
+                const alertEl = document.getElementById('stealthAlert');
+                if (isDanger) {
+                    AudioEngine.playTone(220, 'sawtooth', 0.2, 0.08);
+                    alertEl.className = 'py-2 px-4 rounded-lg bg-red-950 border-2 border-red-500 text-red-200 font-bold text-sm sm:text-base animate-pulse';
+                    alertEl.textContent = '🔴 警告！飛七的提燈光束正在掃描，快躲起來！';
+                    setTimeout(() => {
+                        if (isDanger && !isHiding && !done) {
+                            AudioEngine.playError();
+                            GameState.mistakes++;
+                            progress = Math.max(0, progress - 25);
+                            document.getElementById('stealthBar').style.width = `${progress}%`;
+                            document.getElementById('stealthPct').textContent = progress;
+                            alertEl.textContent = '💥 被提燈照到了！退回陰影處（進度 -25%）！';
+                        }
+                    }, 950);
+                } else {
+                    alertEl.className = 'py-2 px-4 rounded-lg bg-emerald-900/60 border border-emerald-400 text-emerald-200 font-bold text-sm sm:text-base';
+                    alertEl.textContent = '🟢 提燈移開了（安全，快潛行前進！）';
+                }
+            }, 2400);
+
+            window.stepForward = function() {
+                if (done) return;
+                isHiding = false;
+                document.getElementById('hideStateText').textContent = '暴露在走廊中';
+                if (isDanger) {
+                    AudioEngine.playError();
+                    GameState.mistakes++;
+                    progress = Math.max(0, progress - 20);
+                    document.getElementById('stealthBar').style.width = `${progress}%`;
+                    document.getElementById('stealthPct').textContent = progress;
+                    return;
+                }
+                AudioEngine.playClick();
+                progress = Math.min(100, progress + 10);
+                document.getElementById('stealthBar').style.width = `${progress}%`;
+                document.getElementById('stealthPct').textContent = progress;
+
+                if (progress >= 100) {
+                    done = true;
+                    clearInterval(patrolTimer);
+                    AudioEngine.playSuccess();
+                    GameState.inventory.push('地窖反咒手札');
+                    addPoints(45);
+                    setTimeout(() => {
+                        playTransitionScene(
+                            '史萊哲林第一關通關（+45分）',
+                            '密室暗門：古老蛇語密碼鎖',
+                            '你完美避開了所有巡邏！在禁區密門前，石內卜教授留下了一道古老的蛇紋符號密碼鎖。',
+                            '🐍',
+                            prepSlytherin2
+                        );
+                    }, 500);
+                }
+            };
+
+            window.hideInShadow = function() {
+                if (done) return;
+                AudioEngine.playTone(330, 'sine', 0.1, 0.08);
+                isHiding = true;
+                document.getElementById('hideStateText').textContent = '✅ 已隱身於石柱陰影中';
+            };
+        }
+
+        function prepSlytherin2() {
+            document.getElementById('hudStageLabel').textContent = '史萊哲林第二關：說明書';
+            renderLevelInstructionPage(
+                '史萊哲林試煉（2 / 5）',
+                '第二關：蛇佬腔符文密碼鎖破譯',
+                '這道石門需要輸入由 4 個古老符文組成的密碼。每次輸入後，機關會提示你「位置與符號皆正確」的數量！',
+                [
+                    '密碼由 <strong>4 個不重複的符文</strong>組成（可選符文：🐍、👑、🗡️、🧪、🕯️）。',
+                    '點擊下方符文按鈕填入 4 格密碼槽並按下「驗證密碼」。',
+                    '根據提示的「🎯 完全正確（位置與符文皆對）」數量推理出正確組合！'
+                ],
+                '🐍 開始破譯蛇語密碼鎖！',
+                startSlytherin2
+            );
+        }
+
+        function startSlytherin2() {
+            document.getElementById('hudStageLabel').textContent = '史萊哲林第二關：進行中';
+            const pool = ['🐍', '👑', '🗡️', '🧪', '🕯️'];
+            const secret = [...pool].sort(() => Math.random() - 0.5).slice(0, 4);
+            let guess = [];
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-3 text-center">
+                    <div class="border-b border-amber-900/20 pb-2 text-left">
+                        <h2 class="text-lg sm:text-xl font-black text-amber-950">🐍 第二關：蛇佬腔符文密碼鎖破譯</h2>
+                        <p class="text-xs text-amber-900/80">猜出 4 個<strong>不重複</strong>的符文排列密碼！</p>
+                    </div>
+
+                    <div class="bg-slate-950 text-emerald-100 p-4 rounded-xl border border-emerald-500/50 space-y-3">
+                        <div class="flex justify-center gap-2.5" id="slySlots">
+                            ${[0,1,2,3].map(i => `<div id="slot_${i}" class="w-12 h-12 rounded-xl bg-slate-900 border-2 border-emerald-400/60 flex items-center justify-center text-2xl">?</div>`).join('')}
+                        </div>
+
+                        <div class="flex justify-center gap-2 flex-wrap">
+                            ${pool.map(sym => `
+                                <button onclick="pickSlyRune('${sym}')" class="px-3.5 py-2 rounded-xl bg-emerald-950 hover:bg-emerald-900 border border-amber-400/50 text-xl cursor-pointer">${sym}</button>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex justify-center gap-2">
+                            <button onclick="clearSlySlots()" class="px-4 py-1.5 rounded-lg bg-slate-800 text-xs text-amber-200 cursor-pointer">清除重選</button>
+                            <button onclick="submitSlyCode()" class="magic-btn px-5 py-1.5 rounded-lg text-xs font-bold cursor-pointer">🔓 驗證密碼</button>
+                        </div>
+
+                        <div id="slyHistory" class="text-xs text-left max-h-24 overflow-y-auto bg-slate-900/90 p-2.5 rounded-lg border border-emerald-500/20 space-y-1 text-emerald-200">
+                            <div class="text-amber-300/80">💡 提示：密碼由 4 個不重複符文組成，請開始嘗試！</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            window.pickSlyRune = function(sym) {
+                if (guess.length >= 4 || guess.includes(sym)) return;
+                AudioEngine.playClick();
+                guess.push(sym);
+                document.getElementById(`slot_${guess.length - 1}`).textContent = sym;
+            };
+
+            window.clearSlySlots = function() {
+                guess = [];
+                for (let i = 0; i < 4; i++) document.getElementById(`slot_${i}`).textContent = '?';
+            };
+
+            window.submitSlyCode = function() {
+                if (guess.length < 4) return;
+                let exact = 0;
+                let present = 0;
+                guess.forEach((g, idx) => {
+                    if (g === secret[idx]) exact++;
+                    else if (secret.includes(g)) present++;
+                });
+
+                const hist = document.getElementById('slyHistory');
+                if (exact === 4) {
+                    AudioEngine.playSuccess();
+                    GameState.inventory.push('翡翠蛇紋鑰匙');
+                    addPoints(50);
+                    playTransitionScene(
+                        '史萊哲林第二關通關（+50分）',
+                        '石門開啟：直搗禁區深處',
+                        '隨著一聲低沉的蛇語共鳴，古老石門應聲滑開！你握緊魔杖踏入三樓禁區核心，準備迎接接下來的考驗。',
+                        '🐍',
+                        prepLevel3A
+                    );
+                } else {
+                    AudioEngine.playError();
+                    GameState.mistakes++;
+                    const row = document.createElement('div');
+                    row.innerHTML = `嘗試 [${guess.join(' ')}] → 🎯 位置與符號皆對：<strong>${exact} 個</strong> ｜ 符號對但位置錯：<strong>${present} 個</strong>`;
+                    hist.prepend(row);
+                    clearSlySlots();
+                }
+            };
+        }
+
+        /**
+         * ==========================================
+         * 🦁 葛來分多第一、二關（第二關已大幅調降難度，飛翅鑰匙更容易捕捉）
+         * ==========================================
+         */
+        function prepLevel1() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第一關：說明書';
+            renderLevelInstructionPage(
+                '第一關（1 / 5）',
+                camp.l1.title,
+                camp.l1.story,
+                camp.l1.guide,
+                '⚡ 我瞭解規則了，開始第一關！',
+                startLevel1
+            );
+        }
+
+        let l1Timer = null;
+        let l1SpawnTimer = null;
+
+        function startLevel1() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第一關：進行中';
+            let caught = 0;
+            const target = 12;
+            let timeLeft = 14;
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/20 pb-2">
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-black text-amber-950">${camp.l1.title}</h2>
+                            <p class="text-xs text-amber-900/80">14 秒內收集滿 <strong>12 份</strong> 目標物品，避開干擾項！</p>
+                        </div>
+                        <div class="flex gap-3 text-xs sm:text-sm font-bold">
+                            <span class="px-2.5 py-1 rounded bg-emerald-900/15 emerald-ink">進度：<span id="l1Count">0</span> / ${target}</span>
+                            <span class="px-2.5 py-1 rounded bg-red-900/15 text-red-900">剩餘：<span id="l1Time">${timeLeft}</span>s</span>
+                        </div>
+                    </div>
+
+                    <div id="l1Arena" class="game-canvas-box h-64 sm:h-72 relative bg-gradient-to-b from-slate-900 via-slate-800 to-amber-950/60">
+                        <div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-15 text-amber-200 font-magic-en text-3xl sm:text-4xl font-bold">
+                            ${GameState.house} TRIAL I
+                        </div>
+                    </div>
+
+                    <div id="l1Msg" class="text-center text-xs sm:text-sm font-semibold text-amber-900">
+                        ⚡ 集中精神！快速點擊出現的目標物品！
+                    </div>
+                </div>
+            `;
+
+            const arena = document.getElementById('l1Arena');
+
+            function spawnItem() {
+                if (!document.getElementById('l1Arena')) return;
+                const isGood = Math.random() > 0.35;
+                const el = document.createElement('button');
+                el.type = 'button';
+                const x = Math.random() * 80 + 8;
+                const y = Math.random() * 72 + 12;
+                el.style.left = `${x}%`;
+                el.style.top = `${y}%`;
+                el.className = `absolute transform -translate-x-1/2 -translate-y-1/2 transition-transform active:scale-90 cursor-pointer select-none animate-float`;
+                
+                if (isGood) {
+                    el.innerHTML = `
+                        <div class="px-2.5 py-1.5 rounded bg-[#f4e8d1] border-2 border-emerald-700 shadow-lg text-xs font-bold emerald-ink">
+                            ${camp.l1.goodItem}
+                        </div>
+                    `;
+                    el.onclick = () => {
+                        AudioEngine.playTone(784, 'sine', 0.12, 0.12);
+                        caught++;
+                        document.getElementById('l1Count').textContent = caught;
+                        el.remove();
+                        if (caught >= target) {
+                            clearInterval(l1Timer);
+                            clearInterval(l1SpawnTimer);
+                            completeLevel1();
+                        }
+                    };
+                } else {
+                    el.innerHTML = `
+                        <div class="px-2.5 py-1.5 rounded-full bg-red-900/95 border border-red-400 text-amber-100 text-xs font-bold shadow-lg">
+                            ${camp.l1.badItem}
+                        </div>
+                    `;
+                    el.onclick = () => {
+                        AudioEngine.playError();
+                        GameState.mistakes++;
+                        arena.classList.add('animate-shake');
+                        setTimeout(() => arena.classList.remove('animate-shake'), 400);
+                        caught = Math.max(0, caught - 2);
+                        document.getElementById('l1Count').textContent = caught;
+                        el.remove();
+                    };
+                }
+
+                arena.appendChild(el);
+                setTimeout(() => { if (el.parentNode) el.remove(); }, 1350);
+            }
+
+            l1SpawnTimer = setInterval(spawnItem, 360);
+            spawnItem();
+
+            l1Timer = setInterval(() => {
+                timeLeft--;
+                const timeEl = document.getElementById('l1Time');
+                if (timeEl) timeEl.textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(l1Timer);
+                    clearInterval(l1SpawnTimer);
+                    if (caught >= target) {
+                        completeLevel1();
+                    } else {
+                        AudioEngine.playError();
+                        GameState.mistakes++;
+                        document.getElementById('l1Msg').innerHTML = `
+                            <span class="text-red-800">❌ 時間到！差一點就收集滿了（${caught}/${target}）</span>
+                            <button onclick="startLevel1()" class="ml-2 px-3 py-1 rounded bg-red-900 text-amber-100 text-xs font-bold cursor-pointer">🔄 重新挑戰</button>
+                        `;
+                    }
+                }
+            }, 1000);
+        }
+
+        function completeLevel1() {
+            const camp = getCampaign();
+            AudioEngine.playSuccess();
+            GameState.inventory.push(camp.l1.rewardItem);
+            addPoints(40);
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-5">
+                    <div class="border-b border-amber-900/20 pb-2">
+                        <span class="text-xs font-bold text-emerald-800">✅ 第一關通關（+40分）！獲得關鍵道具：${camp.l1.rewardItem}</span>
+                        <h2 class="text-xl font-black text-amber-950 mt-0.5">${camp.icon} ${GameState.house}的線索匯聚</h2>
+                    </div>
+
+                    ${renderDialogueBox(
+                        camp.l1.afterSpeaker,
+                        camp.l1.afterName,
+                        camp.l1.afterTitle,
+                        camp.l1.afterQuote
+                    )}
+
+                    <div class="text-center pt-2">
+                        <button onclick="playTransitionScene('章節過場 • 前往高空走廊', '夜幕下的霍格華茲走廊', '你握緊魔杖，隨著${GameState.house}的線索悄悄潛入三樓禁區大廳，無數閃爍著銀光的飛翅鑰匙正在高空盤旋……', '🗝️', prepLevel2)" class="magic-btn px-7 py-3 rounded-xl font-bold text-sm sm:text-base cursor-pointer">
+                            ✨ 前往第二關
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function prepLevel2() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第二關：說明書';
+            renderLevelInstructionPage(
+                '第二關（2 / 5）',
+                camp.l2.title,
+                camp.l2.story,
+                camp.l2.guide,
+                '🧹 騎上掃帚，開始第二關！',
+                startLevel2
+            );
+        }
+
+        function startLevel2() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第二關：進行中';
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/20 pb-2">
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-black text-amber-950">${camp.l2.title}</h2>
+                            <p class="text-xs text-amber-900/80">躲避${camp.l2.hazardName}，捕捉 <strong>4 把${camp.l2.targetName}</strong>！</p>
+                        </div>
+                        <div class="flex gap-3 text-xs sm:text-sm font-bold">
+                            <span class="px-2.5 py-1 rounded bg-amber-900/15 text-amber-950">鑰匙：<span id="l2Keys">0</span> / 4</span>
+                            <span class="px-2.5 py-1 rounded bg-red-900/15 text-red-900">護盾：<span id="l2Hp">5</span></span>
+                        </div>
+                    </div>
+
+                    <div id="l2Box" class="game-canvas-box h-64 sm:h-72 relative">
+                        <canvas id="flightCanvas" class="w-full h-full block"></canvas>
+                    </div>
+                </div>
+            `;
+
+            const fCanvas = document.getElementById('flightCanvas');
+            const fCtx = fCanvas.getContext('2d');
+            const rect = fCanvas.parentElement.getBoundingClientRect();
+            fCanvas.width = rect.width;
+            fCanvas.height = rect.height;
+
+            let playerY = fCanvas.height / 2;
+            const playerX = 65;
+            let keysCaught = 0;
+            let hp = 5; // 護盾從 3 提升為 5，降低難度
+            let frame = 0;
+            let gameOver = false;
+
+            const obstacles = [];
+            const keys = [];
+
+            function updatePlayerY(clientY) {
+                const r = fCanvas.getBoundingClientRect();
+                playerY = Math.max(22, Math.min(fCanvas.height - 22, clientY - r.top));
+            }
+
+            fCanvas.addEventListener('mousemove', e => updatePlayerY(e.clientY));
+            fCanvas.addEventListener('touchmove', e => {
+                e.preventDefault();
+                if (e.touches[0]) updatePlayerY(e.touches[0].clientY);
+            }, { passive: false });
+
+            function loop() {
+                if (gameOver || !document.getElementById('flightCanvas')) return;
+                frame++;
+                fCtx.clearRect(0, 0, fCanvas.width, fCanvas.height);
+
+                fCtx.fillStyle = '#090e1c';
+                fCtx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+                fCtx.strokeStyle = 'rgba(245, 208, 97, 0.14)';
+                fCtx.lineWidth = 1;
+                for (let i = 0; i < 6; i++) {
+                    const lx = (fCanvas.width - ((frame * 4 + i * 140) % (fCanvas.width + 100)));
+                    fCtx.beginPath();
+                    fCtx.moveTo(lx, 30 + i * 42);
+                    fCtx.lineTo(lx + 70, 30 + i * 42);
+                    fCtx.stroke();
+                }
+
+                // 降低遊走球生成頻率與速度
+                if (frame % 42 === 0) {
+                    obstacles.push({
+                        x: fCanvas.width + 20,
+                        y: Math.random() * (fCanvas.height - 44) + 22,
+                        r: 13,
+                        vx: 3.6 + Math.random() * 1.4,
+                        vy: (Math.random() - 0.5) * 1.2
+                    });
+                }
+
+                // 提高飛翅鑰匙生成頻率並減慢橫移速度，讓玩家更容易接住
+                if (frame % 48 === 0) {
+                    keys.push({
+                        x: fCanvas.width + 20,
+                        y: Math.random() * (fCanvas.height - 64) + 32,
+                        vx: 2.9,
+                        wobble: Math.random() * Math.PI * 2
+                    });
+                }
+
+                // 繪製主角掃帚
+                fCtx.save();
+                fCtx.translate(playerX, playerY);
+                fCtx.fillStyle = 'rgba(245, 208, 97, 0.4)';
+                fCtx.beginPath();
+                fCtx.moveTo(-18, 4);
+                fCtx.lineTo(-46 - Math.sin(frame * 0.5) * 10, 0);
+                fCtx.lineTo(-18, -4);
+                fCtx.fill();
+                fCtx.strokeStyle = '#d97706';
+                fCtx.lineWidth = 3;
+                fCtx.beginPath();
+                fCtx.moveTo(-22, 4);
+                fCtx.lineTo(24, -2);
+                fCtx.stroke();
+                const robeColors = { '葛來分多': '#dc2626', '雷文克勞': '#2563eb', '赫夫帕夫': '#d97706', '史萊哲林': '#059669' };
+                fCtx.fillStyle = robeColors[GameState.house] || '#dc2626';
+                fCtx.beginPath();
+                fCtx.arc(0, -6, 8, 0, Math.PI * 2);
+                fCtx.fill();
+                fCtx.fillStyle = '#fde047';
+                fCtx.beginPath();
+                fCtx.arc(4, -13, 5, 0, Math.PI * 2);
+                fCtx.fill();
+                fCtx.restore();
+
+                for (let i = obstacles.length - 1; i >= 0; i--) {
+                    const o = obstacles[i];
+                    o.x -= o.vx;
+                    o.y += o.vy;
+                    if (o.y < 16 || o.y > fCanvas.height - 16) o.vy = -o.vy;
+                    
+                    fCtx.beginPath();
+                    fCtx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+                    fCtx.fillStyle = '#450a0a';
+                    fCtx.fill();
+                    fCtx.lineWidth = 2.5;
+                    fCtx.strokeStyle = '#ef4444';
+                    fCtx.stroke();
+
+                    if (Math.hypot(o.x - playerX, o.y - playerY) < o.r + 11) {
+                        AudioEngine.playError();
+                        GameState.mistakes++;
+                        obstacles.splice(i, 1);
+                        hp--;
+                        document.getElementById('l2Hp').textContent = hp;
+                        if (hp <= 0) {
+                            gameOver = true;
+                            document.getElementById('l2Box').innerHTML = `
+                                <div class="w-full h-full flex flex-col items-center justify-center bg-slate-950/90 text-center p-4 space-y-3">
+                                    <div class="text-red-400 font-black text-lg">💥 掃帚被${camp.l2.hazardName}擊中墜落！</div>
+                                    <p class="text-xs text-amber-200/80">請上下移動避開紅色球體，捕捉 4 把飛翅鑰匙！</p>
+                                    <button onclick="startLevel2()" class="magic-btn px-5 py-2 rounded-xl font-bold text-sm cursor-pointer">🔄 重新起飛挑戰</button>
+                                </div>
+                            `;
+                            return;
+                        }
+                        continue;
+                    }
+                    if (o.x < -30) obstacles.splice(i, 1);
+                }
+
+                for (let i = keys.length - 1; i >= 0; i--) {
+                    const k = keys[i];
+                    k.x -= k.vx;
+                    k.y += Math.sin(frame * 0.1 + k.wobble) * 1.6;
+                    k.y = Math.max(24, Math.min(fCanvas.height - 24, k.y));
+
+                    fCtx.save();
+                    fCtx.translate(k.x, k.y);
+                    // 發光外圈提示，更容易看清與捕捉
+                    fCtx.beginPath();
+                    fCtx.arc(0, 0, 18, 0, Math.PI * 2);
+                    fCtx.fillStyle = 'rgba(253, 224, 71, 0.18)';
+                    fCtx.fill();
+
+                    fCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    const wingY = Math.sin(frame * 0.5) * 6;
+                    fCtx.beginPath();
+                    fCtx.ellipse(-2, -8 + wingY, 8, 4, -0.4, 0, Math.PI * 2);
+                    fCtx.fill();
+                    fCtx.strokeStyle = '#fde047';
+                    fCtx.lineWidth = 2.5;
+                    fCtx.beginPath();
+                    fCtx.arc(-6, 0, 5, 0, Math.PI * 2);
+                    fCtx.moveTo(-1, 0);
+                    fCtx.lineTo(12, 0);
+                    fCtx.lineTo(12, 4);
+                    fCtx.stroke();
+                    fCtx.restore();
+
+                    // 放寬捕捉判定半徑 (22 -> 32)
+                    if (Math.hypot(k.x - playerX, k.y - playerY) < 32) {
+                        AudioEngine.playTone(987.77, 'sine', 0.22, 0.15);
+                        keys.splice(i, 1);
+                        keysCaught++;
+                        document.getElementById('l2Keys').textContent = keysCaught;
+                        if (keysCaught >= 4) {
+                            gameOver = true;
+                            completeLevel2();
+                            return;
+                        }
+                        continue;
+                    }
+                    if (k.x < -30) keys.splice(i, 1);
+                }
+
+                requestAnimationFrame(loop);
+            }
+            loop();
+        }
+
+        function completeLevel2() {
+            const camp = getCampaign();
+            AudioEngine.playSuccess();
+            GameState.inventory.push(camp.l2.rewardItem);
+            addPoints(50);
+
+            playTransitionScene(
+                '第二關通關（+50分）• 禁區陷阱門開啟',
+                '躍入深淵：三頭犬與魔鬼網的考驗',
+                `你用「${camp.l2.rewardItem}」打開了厚重的橡木大門。門後傳來三頭犬毛毛震耳欲聾的低吼，而陷阱門下方正潛伏著嗜暗的魔鬼網藤蔓！`,
+                '🐕',
+                prepLevel3A
+            );
+        }
+
+        /**
+         * ==========================================
+         * 第三關（上＆下）：各自都有事先說明頁 ＋ 高難度雙重試煉
+         * ==========================================
+         */
+        function prepLevel3A() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第三關(上)：說明書';
+            renderLevelInstructionPage(
+                '第三關（上 • 3 / 5）',
+                camp.l3.title + ' — 安眠旋律',
+                camp.l3.story,
+                camp.l3.guideA,
+                '🎵 聆聽示範，開始吹奏安眠曲！',
+                startLevel3
+            );
+        }
+
+        function startLevel3() {
+            document.getElementById('hudStageLabel').textContent = '第三關(上)：進行中';
+            const noteNames = ['🎵 Do', '🎶 Mi', '🎼 Sol', '✨ Si'];
+            const targetSeq = Array.from({ length: 6 }, () => Math.floor(Math.random() * 4));
+            let userSeq = [];
+            let isDemoPlaying = true;
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4">
+                    <div class="border-b border-amber-900/20 pb-2">
+                        <h2 class="text-lg sm:text-xl font-black text-amber-950">第三關（上）：三頭犬毛毛的 6 音符記憶考驗</h2>
+                        <p class="text-xs text-amber-900/80">仔細記住示範的 <strong>6 個音符</strong>順序，示範結束後憑記憶吹奏！</p>
+                    </div>
+
+                    <div class="bg-slate-900 text-amber-200 rounded-xl p-4 text-center space-y-3 border border-amber-500/40 shadow-inner">
+                        <div class="text-4xl">🐕‍🦺🐕‍🦺🐕‍🦺</div>
+                        <p id="fluteHintText" class="text-xs sm:text-sm text-amber-300 font-bold">
+                            🎧 正在示範旋律，請專心記憶……
+                        </p>
+                        <div class="text-xs text-amber-400">你的吹奏進度：<span id="fluteProgress">等待示範完成</span></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1" id="fluteButtons">
+                        ${noteNames.map((label, idx) => `
+                            <button id="fluteBtn_${idx}" onclick="pressFlute(${idx})" disabled class="magic-btn py-3 px-2 rounded-xl font-bold text-xs sm:text-sm cursor-pointer transition-all">
+                                ${label}
+                            </button>
+                        `).join('')}
+                    </div>
+
+                    <div class="text-center">
+                        <button id="replayFluteBtn" onclick="playFluteDemo()" disabled class="text-xs underline text-amber-900 hover:text-red-900 cursor-pointer">
+                            🔁 重新聆聽一次旋律示範
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            window.playFluteDemo = function() {
+                isDemoPlaying = true;
+                userSeq = [];
+                document.querySelectorAll('#fluteButtons button').forEach(b => b.disabled = true);
+                document.getElementById('replayFluteBtn').disabled = true;
+                document.getElementById('fluteHintText').innerHTML = '🎧 正在示範旋律，請專心記憶……';
+                document.getElementById('fluteProgress').textContent = '請看亮起的按鈕順序';
+
+                targetSeq.forEach((noteIdx, step) => {
+                    setTimeout(() => {
+                        if (!document.getElementById(`fluteBtn_${noteIdx}`)) return;
+                        AudioEngine.playFluteNote(noteIdx);
+                        const btn = document.getElementById(`fluteBtn_${noteIdx}`);
+                        btn.classList.add('ring-4', 'ring-yellow-300', 'scale-105', 'bg-amber-700');
+                        setTimeout(() => {
+                            if (btn) btn.classList.remove('ring-4', 'ring-yellow-300', 'scale-105', 'bg-amber-700');
+                        }, 360);
+                    }, step * 580 + 300);
+                });
+
+                setTimeout(() => {
+                    if (!document.getElementById('fluteButtons')) return;
+                    isDemoPlaying = false;
+                    document.querySelectorAll('#fluteButtons button').forEach(b => b.disabled = false);
+                    document.getElementById('replayFluteBtn').disabled = false;
+                    document.getElementById('fluteHintText').innerHTML = '🎶 輪到你了！請憑記憶依序吹奏剛才的 <strong>6 個音符</strong>！';
+                    document.getElementById('fluteProgress').textContent = '0 / 6';
+                }, targetSeq.length * 580 + 500);
+            };
+
+            window.pressFlute = function(idx) {
+                if (isDemoPlaying) return;
+                AudioEngine.playFluteNote(idx);
+                userSeq.push(idx);
+                const progEl = document.getElementById('fluteProgress');
+                
+                const currentStep = userSeq.length - 1;
+                if (userSeq[currentStep] !== targetSeq[currentStep]) {
+                    AudioEngine.playError();
+                    GameState.mistakes++;
+                    userSeq = [];
+                    progEl.innerHTML = '<span class="text-red-400">音調吹錯了！毛毛怒吼一聲，請從第 1 個音重新吹奏！</span>';
+                    return;
+                }
+
+                progEl.textContent = `${userSeq.length} / 6（${userSeq.map(i => noteNames[i].split(' ')[1]).join(' → ')}）`;
+
+                if (userSeq.length === targetSeq.length) {
+                    AudioEngine.playSuccess();
+                    addPoints(25);
+                    setTimeout(prepLevel3B, 550);
+                }
+            };
+
+            playFluteDemo();
+        }
+
+        function prepLevel3B() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第三關(下)：說明書';
+            renderLevelInstructionPage(
+                '第三關（下 • 3 / 5）',
+                camp.l3.title + ' — 太陽火焰魔法陣',
+                '三頭犬毛毛沉沉睡去，你順著陷阱門滑落到潮濕冰冷的地下室——四周的魔鬼網藤蔓正瘋狂向你纏繞而來！',
+                camp.l3.guideB,
+                '🔥 舉起魔杖，開始繪製太陽火焰陣！',
+                startLevel3PartB
+            );
+        }
+
+        function startLevel3PartB() {
+            document.getElementById('hudStageLabel').textContent = '第三關(下)：進行中';
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/20 pb-2">
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-black text-amber-950">第三關（下）：太陽火焰魔法陣（Lumos Solem）</h2>
+                            <p class="text-xs text-amber-900/80">按住滑鼠/手指依序連通 <strong>1 → 2 → 3 → 4 → 5</strong> 符文節點並劃圈充能！</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded bg-red-900/20 text-red-900 font-bold text-xs sm:text-sm">
+                            藤蔓緊縮：<span id="vineTimer">12.0</span>s
+                        </span>
+                    </div>
+
+                    <div id="l3bBox" class="game-canvas-box h-64 sm:h-72 relative">
+                        <canvas id="spellCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+                        <div class="absolute bottom-2 inset-x-0 text-center pointer-events-none text-xs text-amber-300 font-bold">
+                            🔥 目前目標符文：<span id="nextRuneLabel" class="text-yellow-300 underline">第 1 符文</span> ｜ 魔法陣充能：<span id="spellCharge">0</span>%
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const sCanvas = document.getElementById('spellCanvas');
+            const sCtx = sCanvas.getContext('2d');
+            const rect = sCanvas.parentElement.getBoundingClientRect();
+            sCanvas.width = rect.width;
+            sCanvas.height = rect.height;
+
+            const cx = sCanvas.width / 2;
+            const cy = sCanvas.height / 2 - 6;
+            const radius = Math.min(sCanvas.width, sCanvas.height) * 0.34;
+
+            // 依四大學院設定不同的五芒星符文起筆與連線順序
+            const houseStarConfigs = {
+                '葛來分多': [
+                    -Math.PI / 2,
+                    -Math.PI / 2 + (4 * Math.PI) / 5,
+                    -Math.PI / 2 + (8 * Math.PI) / 5,
+                    -Math.PI / 2 + (2 * Math.PI) / 5,
+                    -Math.PI / 2 + (6 * Math.PI) / 5
+                ],
+                '雷文克勞': [
+                    -Math.PI / 2 + (2 * Math.PI) / 5,
+                    -Math.PI / 2 + (8 * Math.PI) / 5,
+                    -Math.PI / 2 + (4 * Math.PI) / 5,
+                    -Math.PI / 2,
+                    -Math.PI / 2 + (6 * Math.PI) / 5
+                ],
+                '赫夫帕夫': [
+                    -Math.PI / 2 + (4 * Math.PI) / 5,
+                    -Math.PI / 2,
+                    -Math.PI / 2 + (6 * Math.PI) / 5,
+                    -Math.PI / 2 + (2 * Math.PI) / 5,
+                    -Math.PI / 2 + (8 * Math.PI) / 5
+                ],
+                '史萊哲林': [
+                    -Math.PI / 2 + (6 * Math.PI) / 5,
+                    -Math.PI / 2 + (2 * Math.PI) / 5,
+                    -Math.PI / 2 + (8 * Math.PI) / 5,
+                    -Math.PI / 2 + (4 * Math.PI) / 5,
+                    -Math.PI / 2
+                ]
+            };
+
+            const starOrderAngles = houseStarConfigs[GameState.house] || houseStarConfigs['葛來分多'];
+
+            const nodes = starOrderAngles.map((ang, idx) => ({
+                num: idx + 1,
+                x: cx + Math.cos(ang) * radius,
+                y: cy + Math.sin(ang) * radius,
+                activated: false
+            }));
+
+            let nextIndex = 0;
+            let charge = 0;
+            let timeLeft = 12.0;
+            let completed = false;
+            let failed = false;
+            let trail = [];
+            let isPointerDown = false;
+
+            const countdown = setInterval(() => {
+                if (completed || failed || !document.getElementById('spellCanvas')) {
+                    clearInterval(countdown);
+                    return;
+                }
+                timeLeft = Math.max(0, timeLeft - 0.1);
+                const tEl = document.getElementById('vineTimer');
+                if (tEl) tEl.textContent = timeLeft.toFixed(1);
+
+                if (timeLeft <= 0) {
+                    failed = true;
+                    clearInterval(countdown);
+                    AudioEngine.playError();
+                    GameState.mistakes++;
+                    document.getElementById('l3bBox').innerHTML = `
+                        <div class="w-full h-full flex flex-col items-center justify-center bg-slate-950/95 text-center p-4 space-y-3">
+                            <div class="text-red-400 font-black text-lg">🌿 魔鬼網徹底纏住了你們！</div>
+                            <p class="text-xs text-amber-200/80">在 12 秒內依序滑過 1→2→3→4→5 符文並充能至 100% 才能釋放太陽火焰咒！</p>
+                            <button onclick="startLevel3PartB()" class="magic-btn px-5 py-2 rounded-xl font-bold text-sm cursor-pointer">🔄 重新施展光明咒</button>
+                        </div>
+                    `;
+                }
+            }, 100);
+
+            function resetRunes() {
+                AudioEngine.playError();
+                GameState.mistakes++;
+                nodes.forEach(n => n.activated = false);
+                nextIndex = 0;
+                charge = 0;
+                trail = [];
+                document.getElementById('nextRuneLabel').textContent = '第 1 符文';
+                document.getElementById('spellCharge').textContent = '0';
+                sCanvas.parentElement.classList.add('animate-shake');
+                setTimeout(() => sCanvas.parentElement?.classList.remove('animate-shake'), 350);
+            }
+
+            function handleMove(clientX, clientY) {
+                if (completed || failed) return;
+                const r = sCanvas.getBoundingClientRect();
+                const px = clientX - r.left;
+                const py = clientY - r.top;
+
+                trail.push({ x: px, y: py, life: 1.0 });
+                if (trail.length > 35) trail.shift();
+
+                nodes.forEach((node, idx) => {
+                    const d = Math.hypot(px - node.x, py - node.y);
+                    if (d < 24) {
+                        if (idx === nextIndex) {
+                            node.activated = true;
+                            nextIndex++;
+                            charge = Math.min(100, nextIndex * 18);
+                            AudioEngine.playTone(523 + nextIndex * 90, 'sine', 0.2, 0.14);
+                            document.getElementById('spellCharge').textContent = charge;
+                            document.getElementById('nextRuneLabel').textContent = nextIndex < 5 ? `第 ${nextIndex + 1} 符文` : '全部連通！持續劃圈充能至 100%！';
+                        } else if (idx > nextIndex) {
+                            resetRunes();
+                        }
+                    }
+                });
+
+                if (nextIndex === 5) {
+                    charge = Math.min(100, charge + 1.4);
+                    document.getElementById('spellCharge').textContent = Math.floor(charge);
+                    if (charge >= 100) {
+                        completed = true;
+                        clearInterval(countdown);
+                        AudioEngine.playSuccess();
+                        addPoints(35);
+                        setTimeout(() => {
+                            playTransitionScene(
+                                '第三關通關（+60分）• 深入地底石室',
+                                '智慧與策略的雙重殿堂',
+                                '耀眼的太陽火焰將魔鬼網驅散！你穿過石廊，來到了考驗策略、智慧與邏輯推理的第四道防線……',
+                                '♟️',
+                                prepLevel4
+                            );
+                        }, 550);
+                    }
+                }
+            }
+
+            sCanvas.addEventListener('mousedown', e => { isPointerDown = true; handleMove(e.clientX, e.clientY); });
+            window.addEventListener('mouseup', () => isPointerDown = false);
+            sCanvas.addEventListener('mousemove', e => { if (isPointerDown) handleMove(e.clientX, e.clientY); });
+            sCanvas.addEventListener('touchstart', e => {
+                e.preventDefault();
+                isPointerDown = true;
+                if (e.touches[0]) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: false });
+            sCanvas.addEventListener('touchmove', e => {
+                e.preventDefault();
+                if (e.touches[0]) handleMove(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: false });
+
+            function renderSpellLoop() {
+                if (completed || failed || !document.getElementById('spellCanvas')) return;
+                sCtx.fillStyle = '#070b14';
+                sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+
+                const shrinkRatio = 1 - (timeLeft / 12.0);
+                const vineReach = shrinkRatio * (Math.min(sCanvas.width, sCanvas.height) * 0.45);
+                sCtx.strokeStyle = '#14532d';
+                sCtx.lineWidth = 12;
+                for (let i = 0; i < 12; i++) {
+                    const ang = (i / 12) * Math.PI * 2;
+                    sCtx.beginPath();
+                    sCtx.moveTo(cx + Math.cos(ang) * (radius + 90), cy + Math.sin(ang) * (radius + 90));
+                    sCtx.lineTo(cx + Math.cos(ang) * (radius + 75 - vineReach), cy + Math.sin(ang) * (radius + 75 - vineReach));
+                    sCtx.stroke();
+                }
+
+                sCtx.strokeStyle = nextIndex === 5 ? 'rgba(253, 224, 71, 0.85)' : 'rgba(245, 158, 11, 0.25)';
+                sCtx.lineWidth = 2;
+                sCtx.beginPath();
+                sCtx.arc(cx, cy, radius, 0, Math.PI * 2);
+                sCtx.stroke();
+
+                sCtx.beginPath();
+                nodes.forEach((n, i) => {
+                    if (i === 0) sCtx.moveTo(n.x, n.y);
+                    else sCtx.lineTo(n.x, n.y);
+                });
+                sCtx.closePath();
+                sCtx.stroke();
+
+                if (nextIndex > 1) {
+                    sCtx.strokeStyle = '#fde047';
+                    sCtx.lineWidth = 4;
+                    sCtx.beginPath();
+                    for (let i = 0; i < nextIndex; i++) {
+                        if (i === 0) sCtx.moveTo(nodes[i].x, nodes[i].y);
+                        else sCtx.lineTo(nodes[i].x, nodes[i].y);
+                    }
+                    sCtx.stroke();
+                }
+
+                nodes.forEach((n, idx) => {
+                    const isTarget = idx === nextIndex;
+                    sCtx.beginPath();
+                    sCtx.arc(n.x, n.y, isTarget ? 21 : 17, 0, Math.PI * 2);
+                    sCtx.fillStyle = n.activated ? '#f59e0b' : (isTarget ? '#7c2d12' : '#1e293b');
+                    sCtx.fill();
+                    sCtx.lineWidth = isTarget ? 3 : 2;
+                    sCtx.strokeStyle = n.activated ? '#fef08a' : (isTarget ? '#fbbf24' : '#64748b');
+                    sCtx.stroke();
+
+                    sCtx.fillStyle = '#ffffff';
+                    sCtx.font = 'bold 14px Cinzel, serif';
+                    sCtx.textAlign = 'center';
+                    sCtx.textBaseline = 'middle';
+                    sCtx.fillText(n.num, n.x, n.y);
+                });
+
+                for (let i = 0; i < trail.length; i++) {
+                    const pt = trail[i];
+                    pt.life -= 0.04;
+                    if (pt.life <= 0) continue;
+                    sCtx.beginPath();
+                    sCtx.arc(pt.x, pt.y, 8 * pt.life, 0, Math.PI * 2);
+                    sCtx.fillStyle = `rgba(254, 240, 138, ${pt.life})`;
+                    sCtx.fill();
+                }
+
+                requestAnimationFrame(renderSpellLoop);
+            }
+            renderSpellLoop();
+        }
+
+        /**
+         * ==========================================
+         * 第四關：前置說明頁 ＋ 學院專屬戰略抉擇 ＋ 魔藥邏輯推理
+         * ==========================================
+         */
+        function prepLevel4() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第四關：說明書';
+            renderLevelInstructionPage(
+                '第四關（4 / 5）',
+                camp.l4.title,
+                camp.l4.story,
+                camp.l4.guide,
+                '🧪 進入石室，接受策略與魔藥考驗！',
+                startLevel4
+            );
+        }
+
+        function startLevel4() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第四關(上)：進行中';
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4">
+                    <div class="border-b border-amber-900/20 pb-2">
+                        <h2 class="text-lg sm:text-xl font-black text-amber-950">${camp.l4.title} — 學院專屬抉擇</h2>
+                        <p class="text-xs text-amber-900/80">展現專屬於 <strong>${GameState.house}</strong> 的核心精神：</p>
+                    </div>
+
+                    ${renderDialogueBox(
+                        camp.mentorKey,
+                        `${GameState.house}的考驗`,
+                        camp.mentorTitle,
+                        camp.l4.chessPrompt
+                    )}
+
+                    <div class="grid grid-cols-1 gap-2.5 pt-1">
+                        <button onclick="solveChess(false)" class="p-3 rounded-xl bg-amber-900/10 hover:bg-amber-900/20 border border-amber-900/30 text-left text-xs sm:text-sm text-amber-950 cursor-pointer">
+                            ${camp.l4.chessBad}
+                        </button>
+                        <button onclick="solveChess(true)" class="p-3.5 rounded-xl ${camp.colorClass} hover:brightness-110 border border-amber-400/50 text-left text-xs sm:text-sm text-amber-100 font-bold cursor-pointer shadow">
+                            ${camp.l4.chessGood}
+                        </button>
+                    </div>
+                    <div id="chessFeedback" class="text-xs text-red-800 font-bold text-center"></div>
+                </div>
+            `;
+        }
+
+        function solveChess(isCorrect) {
+            if (!isCorrect) {
+                AudioEngine.playError();
+                GameState.mistakes++;
+                document.getElementById('chessFeedback').textContent = '⚠️ 這個選擇違背了學院的智慧與勇氣！請重新思考！';
+                return;
+            }
+            AudioEngine.playSuccess();
+            addPoints(25);
+            startLevel4PartB();
+        }
+
+        let potionTimer = null;
+
+        function startLevel4PartB() {
+            document.getElementById('hudStageLabel').textContent = '第四關(下)：魔藥推理';
+            let pTimeLeft = 22;
+
+            // 四大學院專屬魔藥邏輯詩句與不同正確答案
+            const housePotionPuzzles = {
+                '葛來分多': {
+                    speaker: 'hermione',
+                    speakerName: '妙麗的邏輯推理',
+                    riddle: '「<em>『六瓶之中三瓶毒，兩瓶蕁麻酒無用；毒藥總在蕁麻酒的左側，兩端皆非前進藥；<strong>最矮小的那瓶能帶人穿越黑火前進</strong>，最圓胖的那瓶能帶人穿越紫火返回。』</em>」',
+                    correctId: 'tiny',
+                    roundHint: '⚠️ 這是穿越「紫色火焰」返回退路的圓胖藥水（倒扣 5 秒）！',
+                    wrongHint: '⚠️ 錯了！這是毒藥或蕁麻酒（倒扣 5 秒），再讀一次關鍵特徵！'
+                },
+                '雷文克勞': {
+                    speaker: 'flitwick',
+                    speakerName: '古籍邏輯銘文',
+                    riddle: '「<em>『真理藏於偶數之列，卻不在最右的水晶高腳杯；它不冒紫泡，亦非極矮之瓶；<strong>唯有散發清甜果香的深綠玻璃瓶，能引領智者穿越黑火前進</strong>。』</em>」',
+                    correctId: 'wine1',
+                    roundHint: '⚠️ 這瓶冒著紫泡的圓胖瓶只能帶你退回後方（倒扣 5 秒）！',
+                    wrongHint: '⚠️ 推理有誤！仔細核對「偶數位置」與「深綠果香」的線索（倒扣 5 秒）！'
+                },
+                '赫夫帕夫': {
+                    speaker: 'sprout',
+                    speakerName: '溫室草藥手札',
+                    riddle: '「<em>『最左與最右皆為烈性毒草汁，玻璃透明之瓶亦不可飲；<strong>唯有源自大地陶土、沉重冰冷且緊鄰圓胖瓶右側的那一瓶，能守護你穿越黑火前進</strong>。』</em>」',
+                    correctId: 'poison2',
+                    roundHint: '⚠️ 這是位於左側的圓胖大肚瓶，並不是它右側的陶土瓶（倒扣 5 秒）！',
+                    wrongHint: '⚠️ 喝錯了！尋找「大地陶土製成、沉重冰冷」的那一瓶（倒扣 5 秒）！'
+                },
+                '史萊哲林': {
+                    speaker: 'snape',
+                    speakerName: '石內卜的親筆謎題',
+                    riddle: '「<em>『平庸之輩總以為兩端皆無生路，殊不知真正的捷徑就在眼前；<strong>唯有立於最左端、高挑如銀蛇般的細長高瓶，能助強者穿越黑火前進</strong>。』</em>」',
+                    correctId: 'poison1',
+                    roundHint: '⚠️ 那只是給膽小鬼退回去的圓胖瓶（倒扣 5 秒）！',
+                    wrongHint: '⚠️ 愚蠢！再讀一次石內卜留下的「最左端、細長高瓶」提示（倒扣 5 秒）！'
+                }
+            };
+
+            const puzzle = housePotionPuzzles[GameState.house] || housePotionPuzzles['葛來分多'];
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-3">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-amber-900/20 pb-2">
+                        <div>
+                            <h2 class="text-lg sm:text-xl font-black text-amber-950">第四關（下）：${GameState.house}專屬魔藥邏輯難題</h2>
+                            <p class="text-xs text-amber-900/80">在 <strong>22 秒內</strong> 根據詩句選出正確的前進藥水（選錯倒扣 5 秒）！</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded bg-red-900/20 text-red-900 font-bold text-xs sm:text-sm">
+                            火焰合攏：<span id="potionTime">${pTimeLeft}</span>s
+                        </span>
+                    </div>
+
+                    ${renderDialogueBox(
+                        puzzle.speaker,
+                        puzzle.speakerName,
+                        `${GameState.house}專屬線索`,
+                        puzzle.riddle
+                    )}
+
+                    <div id="potionGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
+                        <button onclick="choosePotion('poison1')" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-200 flex flex-col items-center cursor-pointer">
+                            <span class="text-2xl mb-0.5">🧪</span>
+                            <span class="font-bold text-xs">1號：細長高瓶</span>
+                            <span class="text-[10px] text-amber-400/70">位於最左端</span>
+                        </button>
+                        <button onclick="choosePotion('wine1')" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-200 flex flex-col items-center cursor-pointer">
+                            <span class="text-2xl mb-0.5">🍾</span>
+                            <span class="font-bold text-xs">2號：深綠玻璃瓶</span>
+                            <span class="text-[10px] text-amber-400/70">散發果香</span>
+                        </button>
+                        <button onclick="choosePotion('tiny')" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-200 flex flex-col items-center cursor-pointer">
+                            <span class="text-lg mb-0.5 mt-1.5">🧴</span>
+                            <span class="font-bold text-xs">3號：極矮小藥瓶</span>
+                            <span class="text-[10px] text-amber-400/70">冰涼無色</span>
+                        </button>
+                        <button onclick="choosePotion('round')" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-200 flex flex-col items-center cursor-pointer">
+                            <span class="text-2xl mb-0.5">⚗️</span>
+                            <span class="font-bold text-xs">4號：圓胖大肚瓶</span>
+                            <span class="text-[10px] text-amber-400/70">冒著紫泡</span>
+                        </button>
+                        <button onclick="choosePotion('poison2')" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-200 flex flex-col items-center cursor-pointer">
+                            <span class="text-2xl mb-0.5">🏺</span>
+                            <span class="font-bold text-xs">5號：黑陶窄口瓶</span>
+                            <span class="text-[10px] text-amber-400/70">沉重冰冷</span>
+                        </button>
+                        <button onclick="choosePotion('wine2')" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/40 text-amber-200 flex flex-col items-center cursor-pointer">
+                            <span class="text-2xl mb-0.5">🍷</span>
+                            <span class="font-bold text-xs">6號：水晶高腳瓶</span>
+                            <span class="text-[10px] text-amber-400/70">位於最右端</span>
+                        </button>
+                    </div>
+                    <div id="potionFeedback" class="text-xs text-red-800 font-bold text-center min-h-[1.25rem]"></div>
+                </div>
+            `;
+
+            clearInterval(potionTimer);
+            potionTimer = setInterval(() => {
+                if (!document.getElementById('potionTime')) { clearInterval(potionTimer); return; }
+                pTimeLeft--;
+                document.getElementById('potionTime').textContent = Math.max(0, pTimeLeft);
+                if (pTimeLeft <= 0) {
+                    clearInterval(potionTimer);
+                    AudioEngine.playError();
+                    GameState.mistakes++;
+                    document.getElementById('potionGrid').innerHTML = `
+                        <div class="col-span-full text-center p-4 bg-red-950/90 text-amber-100 rounded-xl space-y-2">
+                            <div class="font-bold">🔥 黑色火焰徹底封死了門扉！</div>
+                            <button onclick="startLevel4PartB()" class="magic-btn px-4 py-1.5 rounded-lg text-xs font-bold cursor-pointer">🔄 重新推理魔藥</button>
+                        </div>
+                    `;
+                }
+            }, 1000);
+
+            window.choosePotion = function(type) {
+                if (type !== puzzle.correctId) {
+                    AudioEngine.playError();
+                    GameState.mistakes++;
+                    pTimeLeft = Math.max(1, pTimeLeft - 5);
+                    document.getElementById('potionTime').textContent = pTimeLeft;
+                    const hint = type === 'round' ? puzzle.roundHint : puzzle.wrongHint;
+                    document.getElementById('potionFeedback').textContent = hint;
+                    return;
+                }
+                clearInterval(potionTimer);
+                AudioEngine.playSuccess();
+                addPoints(35);
+
+                playTransitionScene(
+                    '第四關通關（+60分）• 穿越黑色火焰',
+                    '最終密室：意亂情迷鏡前的身影',
+                    '冰涼的魔藥讓你毫髮無傷地穿過了熊熊燃燒的黑色火焰。在最後的房間中央，矗立著那面金碧輝煌的「意亂情迷鏡」，而站在鏡子前的，竟然是……',
+                    '🪞',
+                    prepLevel5
+                );
+            };
+        }
+
+        /**
+         * ==========================================
+         * 第五關：前置說明頁 ＋ 意亂情迷鏡與終極對決
+         * ==========================================
+         */
+        function prepLevel5() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第五關：說明書';
+            renderLevelInstructionPage(
+                '第五關（最終決戰 • 5 / 5）',
+                camp.l5.title,
+                camp.l5.story,
+                camp.l5.guide,
+                '🪞 踏入最終密室，直面黑魔王！',
+                startLevel5
+            );
+        }
+
+        function startLevel5() {
+            const camp = getCampaign();
+            document.getElementById('hudStageLabel').textContent = '第五關(上)：鏡像試煉';
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4">
+                    <div class="flex items-center justify-between border-b border-amber-900/20 pb-2">
+                        <h2 class="text-lg sm:text-xl font-black text-amber-950">${camp.l5.title}</h2>
+                        <span class="text-xs font-bold px-2 py-0.5 rounded bg-purple-950 text-purple-200">幕後黑手現身</span>
+                    </div>
+
+                    ${renderDialogueBox(
+                        'quirrell',
+                        '奎若教授 ＆ 佛地魔',
+                        '黑魔法防禦術教師／雙面宿主',
+                        '「沒錯，不是石內卜，是我！只要站在這面<strong>意亂情迷鏡</strong>前，把魔法石交給我，偉大的黑魔王就能讓你獲得無盡財富、甚至實現你最深沉的渴望！」'
+                    )}
+
+                    <div class="bg-slate-950/90 text-amber-100 p-4 rounded-xl border border-amber-500/40 space-y-3">
+                        <p class="text-xs sm:text-sm text-center text-amber-300 font-semibold">
+                            鏡子裡的倒影正看著你……只有「想找到魔法石，卻不想利用它謀私利」的人才能得到它：
+                        </p>
+                        <div class="grid grid-cols-1 gap-2.5">
+                            <button onclick="mirrorChoice('greed')" class="p-3 rounded-lg bg-slate-900 hover:bg-slate-800 border border-purple-500/40 text-left text-xs sm:text-sm cursor-pointer">
+                                💰 凝視鏡中自己點石成金、喝下長生不老生命水的畫面
+                            </button>
+                            <button onclick="mirrorChoice('pure')" class="p-3 rounded-lg bg-amber-900/80 hover:bg-amber-800 border border-amber-400 text-left text-xs sm:text-sm font-bold text-amber-100 cursor-pointer">
+                                💎 心中只念著「我要趕在佛地魔之前找到並保護魔法石，絕不私用！」
+                            </button>
+                        </div>
+                        <div id="mirrorMsg" class="text-xs text-red-400 text-center font-bold"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function mirrorChoice(choice) {
+            if (choice !== 'pure') {
+                AudioEngine.playError();
+                GameState.mistakes++;
+                document.getElementById('mirrorMsg').textContent = '⚠️ 鏡子映出了你的貪念，魔法石並未出現！佛地魔發出了冷笑！';
+                return;
+            }
+            AudioEngine.playSuccess();
+            GameState.inventory.push('神秘的魔法石');
+            addPoints(40);
+            startLevel5Battle();
+        }
+
+        function startLevel5Battle() {
+            document.getElementById('hudStageLabel').textContent = '第五關(下)：極限對決';
+            let shieldPower = 15;
+            let battleEnded = false;
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4 text-center">
+                    <div class="border-b border-amber-900/20 pb-2">
+                        <h2 class="text-lg sm:text-xl font-black text-red-950">第五關（下）：愛的古老防禦魔法（極限對決）</h2>
+                        <p class="text-xs text-amber-900/80">佛地魔正瘋狂反撲！護盾能量會不斷被黑魔法侵蝕下降，全速連點壓制他！</p>
+                    </div>
+
+                    <div class="bg-slate-950 text-amber-100 rounded-xl p-5 border-2 border-amber-500/60 shadow-2xl space-y-4">
+                        <div class="text-sm sm:text-base text-amber-200 leading-relaxed">
+                            當奎若的雙手觸碰到皮膚的瞬間，他的手劇烈起泡灼傷！<br>
+                            <span class="text-xs text-amber-400">全速釋放「愛的印記與守護反咒」，別讓黑魔王的反擊吞噬護盾！</span>
+                        </div>
+
+                        <div class="w-full h-6 bg-slate-800 rounded-full overflow-hidden border border-amber-400/50 p-0.5">
+                            <div id="loveShieldBar" class="h-full bg-gradient-to-r from-amber-500 via-yellow-300 to-white rounded-full transition-all duration-75" style="width: 15%"></div>
+                        </div>
+
+                        <button id="loveAttackBtn" onclick="channelLoveMagic()" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-red-800 via-amber-600 to-red-800 hover:brightness-110 text-white font-black text-base sm:text-lg border-2 border-yellow-300 shadow-[0_0_25px_rgba(251,191,36,0.7)] active:scale-95 transition cursor-pointer">
+                            ✨ 全速連點！釋放金色愛之護盾 (<span id="shieldPct">15</span>%)
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            const drainTimer = setInterval(() => {
+                if (battleEnded || !document.getElementById('loveShieldBar')) {
+                    clearInterval(drainTimer);
+                    return;
+                }
+                shieldPower = Math.max(0, shieldPower - 2.6);
+                const pct = Math.floor(shieldPower);
+                document.getElementById('loveShieldBar').style.width = `${pct}%`;
+                document.getElementById('shieldPct').textContent = pct;
+            }, 120);
+
+            window.channelLoveMagic = function() {
+                if (battleEnded) return;
+                shieldPower += 8.5;
+                AudioEngine.playTone(440 + shieldPower * 6, 'triangle', 0.16, 0.14);
+                triggerStarBurst();
+                
+                const pct = Math.min(100, Math.floor(shieldPower));
+                document.getElementById('loveShieldBar').style.width = `${pct}%`;
+                document.getElementById('shieldPct').textContent = pct;
+
+                if (shieldPower >= 100) {
+                    battleEnded = true;
+                    clearInterval(drainTimer);
+                    document.getElementById('loveAttackBtn').disabled = true;
+                    AudioEngine.playFanfare();
+                    addPoints(60);
+
+                    setTimeout(() => {
+                        playTransitionScene(
+                            '最終決戰勝利（+100分）• 邪惡退散',
+                            '三天後的霍格華茲醫院病房與學年終宴',
+                            '在金色的光芒中，奎若化為塵土，佛地魔的靈魂化作黑煙逃逸。魔法石得到了妥善的保護，大禮堂的學年終宴即將揭曉最終的學院盃總分與巫師稱號！',
+                            '🏆',
+                            renderGrandFinale
+                        );
+                    }, 750);
+                }
+            };
+        }
+
+        /**
+         * ==========================================
+         * 6. 學年終宴：總分區間與專屬巫師稱號結算系統
+         * ==========================================
+         */
+        function evaluateWizardRank(totalScore) {
+            if (totalScore >= 460) {
+                return {
+                    rankTitle: '👑 傳奇大法師 • 魔法石永恆守護者',
+                    rankBadgeColor: 'from-amber-600 via-yellow-400 to-amber-600 text-slate-950 border-yellow-200',
+                    rankDesc: '無懈可擊的完美表現！你幾乎沒有任何失誤便突破了所有高難度考驗，連鄧不利多校長都對你的智慧、勇氣與自制力讚嘆不已！'
+                };
+            } else if (totalScore >= 410) {
+                return {
+                    rankTitle: '🎖️ 霍格華茲首席級長 • 梅林爵士團三級勳章',
+                    rankBadgeColor: 'from-red-800 via-amber-700 to-red-800 text-amber-100 border-amber-300',
+                    rankDesc: '極為卓越的巫師才華！你在關鍵時刻展現出非凡的膽識與冷靜推理，是整個學院引以為傲的典範！'
+                };
+            } else if (totalScore >= 360) {
+                return {
+                    rankTitle: '⚡ 卓越巫師新星 • 學院盃逆轉功臣',
+                    rankBadgeColor: 'from-blue-900 via-indigo-800 to-blue-900 text-sky-100 border-sky-300',
+                    rankDesc: '精彩的冒險表現！雖然途中經歷了幾次驚險的波折，但你憑藉不屈的意志成功守護了魔法石，為學院贏得最高榮耀！'
+                };
+            } else {
+                return {
+                    rankTitle: '🪄 勇敢的魔法學徒 • 潛力無窮的守護者',
+                    rankBadgeColor: 'from-slate-800 via-slate-700 to-slate-800 text-amber-200 border-amber-400/60',
+                    rankDesc: '你勇敢地踏出了第一步並成功擊退黑魔王！再多練習魔咒與邏輯推理，下一次一定能獲得更高的榮譽稱號！'
+                };
+            }
+        }
+
+        function renderGrandFinale() {
+            document.getElementById('hudStageLabel').textContent = '終章：學院盃榮耀';
+            const camp = getCampaign();
+            // 依據失誤次數計算精準度獎勵，使總分自然落在 320 ~ 490 分區間
+            const precisionBonus = Math.max(0, 100 - GameState.mistakes * 15);
+            const feastBonus = 120 + precisionBonus;
+            addPoints(feastBonus);
+
+            const rankInfo = evaluateWizardRank(GameState.points);
+
+            stage.innerHTML = `
+                <div class="animate-scene-enter space-y-4 text-center py-2">
+                    <div class="inline-block px-4 py-1 rounded-full bg-amber-900 text-amber-200 font-bold text-xs tracking-widest border border-amber-400">
+                        THE END OF TERM FEAST • 學年終宴大結算
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-amber-950">${camp.icon} ${GameState.house} 奪得學院盃冠軍！</h2>
+
+                    <!-- 專屬總分區間稱號頒發卡 -->
+                    <div class="rounded-2xl bg-gradient-to-r ${rankInfo.rankBadgeColor} p-4 sm:p-5 border-2 shadow-xl space-y-1.5">
+                        <div class="text-[11px] uppercase tracking-widest opacity-85 font-bold">鄧不利多校長親自頒發稱號</div>
+                        <div class="text-lg sm:text-2xl font-black">${rankInfo.rankTitle}</div>
+                        <p class="text-xs sm:text-sm opacity-95 max-w-xl mx-auto leading-relaxed pt-1">${rankInfo.rankDesc}</p>
+                    </div>
+
+                    ${renderDialogueBox(
+                        'dumbledore',
+                        '阿不思·鄧不利多',
+                        '霍格華茲校長',
+                        `「決定我們成為什麼樣的人，不是我們的能力，而是我們的選擇。<strong>${GameState.playerName}</strong>，你為 <strong>${GameState.house}</strong> 贏得了無上的榮光！」`
+                    )}
+
+                    <div class="grid grid-cols-3 gap-2 text-xs bg-amber-950/10 p-3 rounded-xl border border-amber-900/20">
+                        <div class="p-2 rounded bg-white/50">
+                            <div class="text-amber-900/75 font-semibold">試煉失誤次數</div>
+                            <div class="text-lg font-black text-amber-950">${GameState.mistakes} 次</div>
+                        </div>
+                        <div class="p-2 rounded bg-white/50">
+                            <div class="text-amber-900/75 font-semibold">終宴特別追加</div>
+                            <div class="text-lg font-black text-emerald-800">+${feastBonus} 分</div>
+                        </div>
+                        <div class="p-2 rounded bg-white/50">
+                            <div class="text-amber-900/75 font-semibold">最終總積分</div>
+                            <div class="text-xl font-black text-red-900">${GameState.points} 分</div>
+                        </div>
+                    </div>
+
+                    <div class="text-[11px] text-amber-900/80 bg-amber-900/10 rounded-lg p-2">
+                        📊 稱號分數區間：460+ 傳奇大法師 ｜ 410~459 首席級長 ｜ 360~409 卓越新星 ｜ 359以下 魔法學徒
+                    </div>
+
+                    <div class="pt-1 flex flex-wrap justify-center gap-3">
+                        <button onclick="resetAndReplay()" class="magic-btn px-6 py-3 rounded-xl font-bold text-sm sm:text-base cursor-pointer">
+                            🔄 體驗其他三大學院的專屬路線
+                        </button>
+                    </div>
+                </div>
+            `;
+            triggerStarBurst();
+            setTimeout(triggerStarBurst, 500);
+        }
+
+        function resetAndReplay() {
+            AudioEngine.playClick();
+            GameState.points = 0;
+            GameState.mistakes = 0;
+            GameState.inventory = ['冬青木魔杖'];
+            GameState.house = '未分類';
+            document.getElementById('gameHud').classList.add('hidden');
+            renderCharacterSelect();
+        }
+
+        /**
+         * ==========================================
+         * 7. 背景魔法星塵畫布動畫 (Canvas)
+         * ==========================================
+         */
+        const bgCanvas = document.getElementById('bgStarCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        let bgStars = [];
+        let burstSparks = [];
+
+        function resizeBg() {
+            bgCanvas.width = window.innerWidth;
+            bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBg);
+        resizeBg();
+
+        for (let i = 0; i < 70; i++) {
+            bgStars.push({
+                x: Math.random() * bgCanvas.width,
+                y: Math.random() * bgCanvas.height,
+                r: Math.random() * 1.8 + 0.5,
+                vy: -Math.random() * 0.35 - 0.1,
+                alpha: Math.random(),
+                dAlpha: Math.random() * 0.02 + 0.005
+            });
+        }
+
+        function triggerStarBurst() {
+            const cx = bgCanvas.width / 2;
+            const cy = bgCanvas.height / 2;
+            for (let i = 0; i < 32; i++) {
+                const ang = Math.random() * Math.PI * 2;
+                const spd = Math.random() * 5 + 1.5;
+                burstSparks.push({
+                    x: cx,
+                    y: cy,
+                    vx: Math.cos(ang) * spd,
+                    vy: Math.sin(ang) * spd,
+                    r: Math.random() * 3 + 1.2,
+                    life: 1.0
+                });
+            }
+        }
+
+        function animateBg() {
+            bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+
+            bgStars.forEach(s => {
+                s.y += s.vy;
+                s.alpha += s.dAlpha;
+                if (s.alpha > 1 || s.alpha < 0.2) s.dAlpha = -s.dAlpha;
+                if (s.y < 0) s.y = bgCanvas.height;
+
+                bgCtx.beginPath();
+                bgCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                bgCtx.fillStyle = `rgba(245, 208, 97, ${s.alpha})`;
+                bgCtx.fill();
+            });
+
+            for (let i = burstSparks.length - 1; i >= 0; i--) {
+                const sp = burstSparks[i];
+                sp.x += sp.vx;
+                sp.y += sp.vy;
+                sp.life -= 0.022;
+                if (sp.life <= 0) {
+                    burstSparks.splice(i, 1);
+                    continue;
+                }
+                bgCtx.beginPath();
+                bgCtx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2);
+                bgCtx.fillStyle = `rgba(254, 240, 138, ${sp.life})`;
+                bgCtx.fill();
+            }
+
+            requestAnimationFrame(animateBg);
+        }
+
+        window.onload = function() {
+            animateBg();
+            renderCharacterSelect();
+        };
+    </script>
+</body>
+</html>
